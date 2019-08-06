@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadExtract.Library", "CadExtract.Library\CadExtract.Library.csproj", "{41F4DDCD-548C-48B8-BCF7-CB6E59AF19FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{41F4DDCD-548C-48B8-BCF7-CB6E59AF19FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41F4DDCD-548C-48B8-BCF7-CB6E59AF19FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41F4DDCD-548C-48B8-BCF7-CB6E59AF19FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41F4DDCD-548C-48B8-BCF7-CB6E59AF19FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB3C82F6-D247-4B9F-B7C7-5FEA623C1E2C}
+	EndGlobalSection
+EndGlobal
