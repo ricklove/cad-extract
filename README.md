@@ -4,8 +4,9 @@ Extract Tabular Data from Cad Drawing Files
 
 ## Features
 
-- [x] Extract tables from .dxf files
-- [ ] Extract tables from .pdf files
+- [ ] Extract tables from cad drawings
+- [x] Import .dxf files
+- [ ] Import .pdf files
 - [ ] Generate a .cvs file (without merged cells)
 - [ ] Generate a .xsls file (with merged cells)
 - [ ] Transform extracted rows into a .json file (converting column values into object fields)
