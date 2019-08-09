@@ -3,8 +3,10 @@ using System.Text;
 
 namespace CadExtract.Library
 {
-    static class StringExtensions
+    public static class StringExtensions
     {
+        public static bool IsNullOrEmpty(this string text) => string.IsNullOrEmpty(text);
+
         public static string ConcatString(this IEnumerable<string> text, string delimeter = " ")
         {
             var sb = new StringBuilder();

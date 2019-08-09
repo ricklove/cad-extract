@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CadExtract.WpfApp"
+        xmlns:dc="clr-namespace:DebugCanvasWpf.DotNetFramework;assembly=DebugCanvasWpf.DotNetFramework"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
@@ -12,14 +13,23 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <TextBox x:Name="txtFilePath" Width="120"/>
+            <TextBox x:Name="txtFilePath" MinWidth="120"/>
             <Button x:Name="btnBrowse" Content="Browse" Click="BtnBrowse_Click"/>
 
             <Button x:Name="btnLoad" Margin="10,0,0,0" Content="Load" Click="BtnLoad_Click"/>
         </StackPanel>
         <TabControl Grid.Row="1">
             <TabItem Header="Raw">
-                <local:RawView x:Name="compRawView"/>
+                <dc:DebugCanvasComponent x:Name="compRawView"/>
+            </TabItem>
+            <TabItem Header="Boxes">
+                <dc:DebugCanvasComponent x:Name="compBoxesView"/>
+            </TabItem>
+            <TabItem Header="BoxNeighbors">
+                <dc:DebugCanvasComponent x:Name="compBoxNeighborsView"/>
+            </TabItem>
+            <TabItem Header="Tables">
+                <TabControl x:Name="compTables"/>
             </TabItem>
         </TabControl>
     </Grid>

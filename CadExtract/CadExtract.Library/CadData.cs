@@ -21,6 +21,7 @@ namespace CadExtract.Library
         public Vector2 End { get; set; }
         public string Context { get; set; }
         public object Debug_Raw { get; set; }
+        public Vector2 Direction => End - Start;
 
         public override string ToString() => $"{Start} {End}";
     }
