@@ -14,7 +14,8 @@ Extract Tabular Data from Cad Drawing Files
     - [x] Identify Tables (not touching)
     - [x] Partition Separate Tables (even if touching)
 - [x] Preview Extracted Tables
-- [ ] Generate a .cvs file (without merged cells)
+- [x] Preview Extracted Tables (in Situ)
+- [ ] Generate a .csv file (without merged cells)
 - [ ] Generate a .xlsx file (with merged cells)
 - [ ] Transform extracted rows into a .json file (converting column values into object fields)
 - [ ] Verify Extraction Accuracy with Visual Round Trip Automatic Comparison

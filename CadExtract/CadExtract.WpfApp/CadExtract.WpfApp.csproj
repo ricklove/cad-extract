@@ -36,12 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DebugCanvasWpf.DotNetFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DebugCanvasWpf.DotNetFramework.1.0.2\lib\net472\DebugCanvasWpf.DotNetFramework.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\DebugCanvasWpf.DotNetFramework.1.0.3\lib\net472\DebugCanvasWpf.DotNetFramework.dll</HintPath>
     </Reference>
     <Reference Include="DebugCanvasWpf.Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DebugCanvasWpf.DotNetFramework.1.0.2\lib\net472\DebugCanvasWpf.Library.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\DebugCanvasWpf.DotNetFramework.1.0.3\lib\net472\DebugCanvasWpf.Library.dll</HintPath>
     </Reference>
     <Reference Include="netDxf.netstandard, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\netDxf.netstandard.2.3.0\lib\net45\netDxf.netstandard.dll</HintPath>

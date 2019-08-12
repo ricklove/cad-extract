@@ -1,7 +1,10 @@
 ﻿using CadExtract.Library;
+using CadExtract.Library.Geometry;
 using CadExtract.Library.Importers;
 using CadExtract.Library.Layout;
 using DebugCanvasWpf.DotNetFramework;
+using System;
+using System.Linq;
 using System.Windows;
 
 namespace CadExtract.WpfApp
@@ -9,6 +12,19 @@ namespace CadExtract.WpfApp
     public partial class MainWindow : Window
     {
         public MainWindow() => InitializeComponent();
+
+        private void OnWorldBoundsChanged(object sender, EventArgs e)
+        {
+            var worldBounds = compRawView.WorldBounds;
+            if (sender == compBoxesView) { worldBounds = compRawView.WorldBounds; }
+            if (sender == compBoxNeighborsView) { worldBounds = compBoxNeighborsView.WorldBounds; }
+            if (sender == compTablesInDrawing) { worldBounds = compTablesInDrawing.WorldBounds; }
+
+            if (worldBounds != compRawView.WorldBounds) { compRawView.WorldBounds = worldBounds; compRawView.Render(); }
+            if (worldBounds != compBoxesView.WorldBounds) { compBoxesView.WorldBounds = worldBounds; compBoxesView.Render(); }
+            if (worldBounds != compBoxNeighborsView.WorldBounds) { compBoxNeighborsView.WorldBounds = worldBounds; compBoxNeighborsView.Render(); }
+            if (worldBounds != compTablesInDrawing.WorldBounds) { compTablesInDrawing.WorldBounds = worldBounds; compTablesInDrawing.Render(); }
+        }
 
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
@@ -30,6 +46,7 @@ namespace CadExtract.WpfApp
             Draw_RawView(compRawView, cadData);
             Draw_BoxesView(compBoxesView, cadData, tableData);
             Draw_BoxNeighborsView(compBoxNeighborsView, cadData, tableData);
+            Draw_TablesInDrawing(compTablesInDrawing, cadData, tableData);
 
             compTablesUncondensed.Items.Clear();
             tableData.LineTables_Uncondensed.ForEach(x => compTablesUncondensed.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableId}", Content = new TableView() { Table = x } }));
@@ -170,6 +187,83 @@ namespace CadExtract.WpfApp
                 d.DrawBox(t.Bounds.Center, size: t.Bounds.Size, color: System.Drawing.Color.FromArgb(50, System.Drawing.Color.Wheat));
                 d.DrawBox(t.Bounds.Center, size: t.Bounds.Size, color: System.Drawing.Color.FromArgb(100, System.Drawing.Color.Wheat), shouldFill: false);
                 d.DrawText(t.Text, t.Bounds.Center, size: t.Bounds.Size * new System.Numerics.Vector2(1.2f, 2), fontHeight: t.FontHeight, color: System.Drawing.Color.Wheat);
+            }
+
+            view.Render();
+        }
+
+
+        private void Draw_TablesInDrawing(DebugCanvasComponent view, CadData cadData, TableData tableData)
+        {
+            var d = view.DrawingData;
+            d.ClearDrawings();
+
+            for (var i = -100; i <= 100; i++)
+            {
+                d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+                d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            }
+
+            //foreach (var l in cadData.Lines)
+            //{
+            //    d.DrawLine(l.Start, l.End, color: System.Drawing.Color.White);
+            //}
+
+            ////foreach (var l in cadData.Circles)
+            ////{
+            ////    d.DrawBox(l.Circle.Center, size: l.Circle.Radius, color: System.Drawing.Color.Lime, shouldFill: false);
+            ////}
+
+            //foreach (var b in tableData.LineBoxNeighbors)
+            //{
+            //    var color = ColorExtensions.RandomColor(b.TableId.GetHashCode());
+            //    d.DrawBox(b.Bounds.Center, size: b.Bounds.Size, color: System.Drawing.Color.FromArgb(100, color), shouldFill: true);
+            //    d.DrawBox(b.Bounds.Center, size: b.Bounds.Size, color: color, shouldFill: false);
+            //    // d.DrawX(b.Bounds.Center, size: b.Bounds.Size, color: System.Drawing.Color.Lime);
+
+            //    foreach (var n in b.Neighbors_Below)
+            //    {
+            //        d.DrawLine(b.Bounds.Center, n.Bounds.Center + new System.Numerics.Vector2(0.01f, 0.01f), System.Drawing.Color.Cyan);
+            //    }
+
+            //    foreach (var n in b.Neighbors_Above)
+            //    {
+            //        d.DrawLine(b.Bounds.Center, n.Bounds.Center + new System.Numerics.Vector2(0.01f, 0.01f), System.Drawing.Color.Blue);
+            //    }
+
+            //    foreach (var n in b.Neighbors__Left)
+            //    {
+            //        d.DrawLine(b.Bounds.Center, n.Bounds.Center + new System.Numerics.Vector2(0.01f, 0.01f), System.Drawing.Color.Magenta);
+            //    }
+
+            //    foreach (var n in b.Neighbors_Right)
+            //    {
+            //        d.DrawLine(b.Bounds.Center, n.Bounds.Center + new System.Numerics.Vector2(0.01f, 0.01f), System.Drawing.Color.Red);
+            //    }
+
+            //    d.DrawText(b.ColumnRowText, b.Bounds.Center, System.Drawing.Color.Magenta, new System.Numerics.Vector2(1, 0.05f), fontHeight: 0.025f, shadow: System.Drawing.Color.Black);
+            //}
+
+            //foreach (var t in cadData.Texts)
+            //{
+            //    d.DrawBox(t.Bounds.Center, size: t.Bounds.Size, color: System.Drawing.Color.FromArgb(50, System.Drawing.Color.Wheat));
+            //    d.DrawBox(t.Bounds.Center, size: t.Bounds.Size, color: System.Drawing.Color.FromArgb(100, System.Drawing.Color.Wheat), shouldFill: false);
+            //    d.DrawText(t.Text, t.Bounds.Center, size: t.Bounds.Size * new System.Numerics.Vector2(1.2f, 2), fontHeight: t.FontHeight, color: System.Drawing.Color.Wheat);
+            //}
+
+            foreach (var t in tableData.LineTables)
+            {
+                var tBounds = t.LineBoxes.Select(x => x.Box.Bounds).UnionBounds();
+                var color = ColorExtensions.RandomColor(t.TableId.GetHashCode());
+                d.DrawBox(tBounds.Center, size: tBounds.Size, color: System.Drawing.Color.FromArgb(50, color), shouldFill: true);
+                d.DrawBox(tBounds.Center, size: tBounds.Size, color: color, shouldFill: false);
+
+                foreach (var b in t.LineBoxes)
+                {
+                    d.DrawBox(b.Box.Bounds.Center, size: b.Box.Bounds.Size, color: System.Drawing.Color.FromArgb(50, System.Drawing.Color.Wheat));
+                    d.DrawBox(b.Box.Bounds.Center, size: b.Box.Bounds.Size, color: System.Drawing.Color.FromArgb(100, System.Drawing.Color.Wheat), shouldFill: false);
+                    d.DrawText(b.CellText, b.Box.Bounds.Center, size: b.Box.Bounds.Size, fontHeight: b.Box.Texts.Min(x => x.FontHeight) * 0.8f, color: System.Drawing.Color.Wheat);
+                }
             }
 
             view.Render();
