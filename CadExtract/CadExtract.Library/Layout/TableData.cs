@@ -1,4 +1,5 @@
 ﻿using CadExtract.Library.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +17,17 @@ namespace CadExtract.Library.Layout
         public Bounds Bounds { get; }
 
         public List<CadText> Texts { get; } = new List<CadText>();
-        public string CellText => Texts.OrderByDescending(x => x.Bounds.Center.Y).ThenBy(x => x.Bounds.Center.X).Select(x => x.Text).ConcatString(" ");
+
+        public string CellText
+        {
+            get
+            {
+                if (Texts.Count <= 0) { return ""; }
+
+                var fontHeight = Texts.Min(x => x.FontHeight);
+                return Texts.OrderByDescending(x => Math.Round(x.Bounds.Center.Y / fontHeight) * fontHeight).ThenBy(x => x.Bounds.Center.X).Select(x => x.Text).ConcatString(" ");
+            }
+        }
 
         public LineBox(Bounds bounds) => Bounds = bounds;
     }
