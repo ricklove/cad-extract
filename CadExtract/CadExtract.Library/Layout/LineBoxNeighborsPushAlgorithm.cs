@@ -116,12 +116,15 @@ namespace CadExtract.Library.Layout
                 boxes[i].TableId = i;
             }
 
-            foreach (var b in boxes)
+            for (var i = 0; i < 3; i++)
             {
-                b.Neighbors_Above.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                b.Neighbors_Below.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                b.Neighbors__Left.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                b.Neighbors_Right.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                foreach (var b in boxes)
+                {
+                    b.Neighbors_Above.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                    b.Neighbors_Below.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                    b.Neighbors__Left.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                    b.Neighbors_Right.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                }
             }
         }
     }

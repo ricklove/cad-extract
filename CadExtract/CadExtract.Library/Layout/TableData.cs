@@ -9,6 +9,7 @@ namespace CadExtract.Library.Layout
     {
         public List<LineBox> LineBoxes { get; set; }
         public List<LineBoxNeighbors> LineBoxNeighbors { get; set; }
+        public List<LineTable> LineTables_Uncondensed { get; set; }
         public List<LineTable> LineTables { get; set; }
     }
 
@@ -86,7 +87,11 @@ namespace CadExtract.Library.Layout
         public int Row_Span => Row_Max - Row_Min + 1;
         public int Column_Span => Column_Max - Column_Min + 1;
 
+        public string ColumnRowText => $"C{Column_Min}{(Column_Max != Column_Min ? $"-{Column_Max}" : "")} R{Row_Min}{(Row_Max != Row_Min ? $"-{Row_Max}" : "")}";
+
         public int TableId { get; set; }
+
+        public override string ToString() => $"{CellText} ({ColumnRowText})";
     }
 
     public class LineTable

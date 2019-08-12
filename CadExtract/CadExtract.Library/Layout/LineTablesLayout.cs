@@ -5,7 +5,7 @@ namespace CadExtract.Library.Layout
 {
     public static class LineTablesLayout
     {
-        public static List<LineTable> FindLineTables(List<LineBoxNeighbors> boxes)
+        public static List<LineTable> FindLineTables(List<LineBoxNeighbors> boxes, bool shouldCondense)
         {
             var tables = boxes.GroupBy(x => x.TableId).Select(g => new LineTable()
             {
@@ -13,14 +13,15 @@ namespace CadExtract.Library.Layout
                 TableId = g.Key
             }).Where(x => x.LineBoxes.Count > 0).ToList();
 
-            tables.ForEach(x => CondenseTable(x));
+            if (shouldCondense)
+            {
+                tables.ForEach(x => CondenseTable(x));
+            }
             return tables;
         }
 
         private static void CondenseTable(LineTable table)
         {
-            return;
-
             var cMax = table.LineBoxes.Max(x => x.Column_Max);
             var rMax = table.LineBoxes.Max(x => x.Row_Max);
 

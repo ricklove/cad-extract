@@ -28,6 +28,9 @@
             <TabItem Header="BoxNeighbors">
                 <dc:DebugCanvasComponent x:Name="compBoxNeighborsView"/>
             </TabItem>
+            <TabItem Header="Tables (Uncondensed)">
+                <TabControl x:Name="compTablesUncondensed"/>
+            </TabItem>
             <TabItem Header="Tables">
                 <TabControl x:Name="compTables"/>
             </TabItem>

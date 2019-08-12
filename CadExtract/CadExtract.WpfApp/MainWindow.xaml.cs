@@ -22,13 +22,17 @@ namespace CadExtract.WpfApp
         {
             var filePath = txtFilePath.Text;
             var cadData = NetDxfImporter.Import(filePath);
-            var tableData = new TableData() { LineBoxes = LineBoxFinder.FindLineBoxesWithTexts(cadData.Lines, cadData.Texts) };
+            var tableData = new TableData() { LineBoxes = LineBoxFinder.FindLineBoxesWithTexts(cadData.Lines, cadData.Texts, cadData.Circles) };
             tableData.LineBoxNeighbors = LineBoxNeighborsPushAlgorithm.Solve(tableData.LineBoxes);
-            tableData.LineTables = LineTablesLayout.FindLineTables(tableData.LineBoxNeighbors);
+            tableData.LineTables_Uncondensed = LineTablesLayout.FindLineTables(tableData.LineBoxNeighbors, shouldCondense: false);
+            tableData.LineTables = LineTablesLayout.FindLineTables(tableData.LineBoxNeighbors, shouldCondense: true);
 
             Draw_RawView(compRawView, cadData);
             Draw_BoxesView(compBoxesView, cadData, tableData);
             Draw_BoxNeighborsView(compBoxNeighborsView, cadData, tableData);
+
+            compTablesUncondensed.Items.Clear();
+            tableData.LineTables_Uncondensed.ForEach(x => compTablesUncondensed.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableId}", Content = new TableView() { Table = x } }));
 
             compTables.Items.Clear();
             tableData.LineTables.ForEach(x => compTables.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableId}", Content = new TableView() { Table = x } }));

@@ -7,7 +7,7 @@ namespace CadExtract.Library.Layout
 {
     public static class LineBoxFinder
     {
-        public static List<LineBox> FindLineBoxesWithTexts(List<CadLine> lines, List<CadText> texts, float rounding = 0.1f)
+        public static List<LineBox> FindLineBoxesWithTexts(List<CadLine> lines, List<CadText> texts, List<CadCircle> circles_excludeText, float rounding = 0.01f)
         {
             var boxes = FindLineBoxes(lines, rounding);
 
@@ -15,6 +15,14 @@ namespace CadExtract.Library.Layout
 
             texts.ForEach(t =>
             {
+                foreach (var c in circles_excludeText)
+                {
+                    if (c.Circle.Bounds.Contains(t.Bounds.Center))
+                    {
+                        return;
+                    }
+                }
+
                 foreach (var b in boxes_smallestFirst)
                 {
                     if (b.Bounds.Contains(t.Bounds.Center))
