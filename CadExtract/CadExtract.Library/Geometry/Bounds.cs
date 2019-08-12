@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace CadExtract.Library.Geometry
@@ -65,4 +67,20 @@ namespace CadExtract.Library.Geometry
 
         public override string ToString() => $"({Min})->({Max})";
     }
+
+    public static class Bounds_Ext
+    {
+        public static Bounds UnionBounds(this IEnumerable<Bounds> bounds)
+        {
+            var all = bounds.FirstOrDefault();
+
+            foreach (var item in bounds)
+            {
+                all = all.Union(item);
+            }
+
+            return all;
+        }
+    }
+
 }

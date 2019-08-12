@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CadExtract.Library.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -120,22 +121,37 @@ namespace CadExtract.Library.Layout
             {
                 foreach (var b in boxes)
                 {
-                    b.Neighbors_Above.Where(x => IsSameTable(b, x)).ToList().ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                    b.Neighbors_Below.Where(x => IsSameTable(b, x)).ToList().ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                    b.Neighbors__Left.Where(x => IsSameTable(b, x)).ToList().ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                    b.Neighbors_Right.Where(x => IsSameTable(b, x)).ToList().ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                    AssignTableIfAlignedBounds(b, b.Neighbors_Above);
+                    AssignTableIfAlignedBounds(b, b.Neighbors_Below);
+                    AssignTableIfAlignedBounds(b, b.Neighbors__Left);
+                    AssignTableIfAlignedBounds(b, b.Neighbors_Right);
+                }
+            }
+
+            bool IsAlignedTableBounds(Bounds a, Bounds b)
+            {
+                // Aligned (X or Y)
+                var minDiff = a.Min - b.Min;
+                var maxDiff = a.Max - b.Max;
+
+                return Math.Abs(minDiff.X - maxDiff.X) < 0.1f
+                    || Math.Abs(minDiff.Y - maxDiff.Y) < 0.1f;
+            }
+
+            void AssignTableIfAlignedBounds(LineBoxNeighbors box, List<LineBoxNeighbors> neighbors)
+            {
+                if (neighbors.GroupBy(x => x.TableId).Count() != 1) { return; }
+                if (!IsAlignedTableBounds(box.Bounds, neighbors.Select(x => x.Bounds).UnionBounds())) { return; }
+
+                var id = Math.Min(neighbors.First().TableId, box.TableId);
+                box.TableId = id;
+                foreach (var x in neighbors)
+                {
+                    x.TableId = id;
                 }
             }
         }
 
-        private static bool IsSameTable(LineBoxNeighbors a, LineBoxNeighbors b)
-        {
-            // Aligned (X or Y)
-            var minDiff = a.Bounds.Min - b.Bounds.Min;
-            var maxDiff = a.Bounds.Max - b.Bounds.Max;
 
-            return Math.Abs(minDiff.X - maxDiff.X) < 0.1f
-                || Math.Abs(minDiff.Y - maxDiff.Y) < 0.1f;
-        }
     }
 }
