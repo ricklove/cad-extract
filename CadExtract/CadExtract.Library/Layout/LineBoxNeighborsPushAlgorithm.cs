@@ -49,74 +49,61 @@ namespace CadExtract.Library.Layout
         {
             for (var i = 0; i < maxIterations; i++)
             {
+                // Push next neighbor ahead
                 foreach (var b in boxes)
                 {
-                    // Make beyond previous neighbor
-                    foreach (var n in b.Neighbors_Below)
+                    foreach (var n in b.Neighbors_Above)
                     {
-                        if (b.Row_Max <= n.Row_Max) { b.Row_Max = n.Row_Max + 1; }
+                        if (n.Row_Max <= b.Row_Max) { n.Row_Max = b.Row_Max + 1; }
                     }
 
-                    foreach (var n in b.Neighbors__Left)
+                    foreach (var n in b.Neighbors_Right)
                     {
-                        if (b.Column_Max <= n.Column_Max) { b.Column_Max = n.Column_Max + 1; }
+                        if (n.Column_Max <= b.Column_Max) { n.Column_Max = b.Column_Max + 1; }
                     }
+                }
 
-                    // Push Neighbors
-                    if (b.Neighbors_Above.Count == 1)
-                    {
-                        var n = b.Neighbors_Above[0];
-                        if (n.Column_Max < b.Column_Max) { n.Column_Max = b.Column_Max; }
-                    }
-                    if (b.Neighbors_Below.Count == 1)
-                    {
-                        var n = b.Neighbors_Below[0];
-                        if (n.Column_Max < b.Column_Max) { n.Column_Max = b.Column_Max; }
-                    }
+                // Push Sideways Neighbors to be at least equal
+                foreach (var b in boxes)
+                {
+                    var n = b;
 
-                    if (b.Neighbors__Left.Count == 1)
-                    {
-                        var n = b.Neighbors__Left[0];
-                        if (n.Row_Max < b.Row_Max) { n.Row_Max = b.Row_Max; }
-                    }
-                    if (b.Neighbors_Right.Count == 1)
-                    {
-                        var n = b.Neighbors_Right[0];
-                        if (n.Row_Max < b.Row_Max) { n.Row_Max = b.Row_Max; }
-                    }
+                    n = b.Neighbors_Above.OrderByDescending(x => x.Column_Max).FirstOrDefault();
+                    if (n != null && n.Column_Max < b.Column_Max) { n.Column_Max = b.Column_Max; }
+
+                    n = b.Neighbors_Below.OrderByDescending(x => x.Column_Max).FirstOrDefault();
+                    if (n != null && n.Column_Max < b.Column_Max) { n.Column_Max = b.Column_Max; }
+
+                    n = b.Neighbors__Left.OrderByDescending(x => x.Row_Max).FirstOrDefault();
+                    if (n != null && n.Row_Max < b.Row_Max) { n.Row_Max = b.Row_Max; }
+
+                    n = b.Neighbors_Right.OrderByDescending(x => x.Row_Max).FirstOrDefault();
+                    if (n != null && n.Row_Max < b.Row_Max) { n.Row_Max = b.Row_Max; }
                 }
             }
 
-            // Solve Max Col, Row
-            for (var i = 0; i < maxIterations; i++)
+            // Set Max Col, Row
+            foreach (var b in boxes)
             {
-                foreach (var b in boxes)
+                b.Row_Min = new int[] { b.Row_Max }
+                    .Concat(b.Neighbors_Below.Select(n => n.Row_Max + 1))
+                    .Concat(b.Neighbors_Right.Select(n => n.Row_Max))
+                    .Concat(b.Neighbors__Left.Select(n => n.Row_Max))
+                    .Min();
+                b.Column_Min = new int[] { b.Column_Max }
+                    .Concat(b.Neighbors__Left.Select(n => n.Column_Max + 1))
+                    .Concat(b.Neighbors_Above.Select(n => n.Column_Max))
+                    .Concat(b.Neighbors_Below.Select(n => n.Column_Max))
+                    .Min();
+            }
+
+            // Assert that min and max are in correct order
+            foreach (var b in boxes)
+            {
+                if (b.Column_Min > b.Column_Max
+                    || b.Row_Min > b.Row_Max)
                 {
-                    b.Row_Min = b.Neighbors_Below.Count > 0 ? b.Neighbors_Below.Max(x => x.Row_Max) + 1 : b.Row_Max;
-                    b.Column_Min = b.Neighbors__Left.Count > 0 ? b.Neighbors__Left.DefaultIfEmpty(b).Max(x => x.Column_Max) + 1 : b.Column_Max;
-
-                    // Push Neighbors
-                    if (b.Neighbors_Above.Count == 1)
-                    {
-                        var n = b.Neighbors_Above[0];
-                        if (n.Column_Min > b.Column_Min) { n.Column_Min = b.Column_Min; }
-                    }
-                    if (b.Neighbors_Below.Count == 1)
-                    {
-                        var n = b.Neighbors_Below[0];
-                        if (n.Column_Min > b.Column_Min) { n.Column_Min = b.Column_Min; }
-                    }
-
-                    if (b.Neighbors__Left.Count == 1)
-                    {
-                        var n = b.Neighbors__Left[0];
-                        if (n.Row_Min > b.Row_Min) { n.Row_Min = b.Row_Min; }
-                    }
-                    if (b.Neighbors_Right.Count == 1)
-                    {
-                        var n = b.Neighbors_Right[0];
-                        if (n.Row_Min > b.Row_Min) { n.Row_Min = b.Row_Min; }
-                    }
+                    throw new Exception("The algorithm failed");
                 }
             }
 
