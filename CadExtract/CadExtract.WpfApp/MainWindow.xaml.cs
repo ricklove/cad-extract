@@ -137,8 +137,9 @@ namespace CadExtract.WpfApp
 
             foreach (var b in tableData.LineBoxNeighbors)
             {
-                d.DrawBox(b.Bounds.Center, size: b.Bounds.Size, color: System.Drawing.Color.FromArgb(25, System.Drawing.Color.Lime), shouldFill: true);
-                d.DrawBox(b.Bounds.Center, size: b.Bounds.Size, color: System.Drawing.Color.Lime, shouldFill: false);
+                var color = ColorExtensions.RandomColor(b.TableId.GetHashCode());
+                d.DrawBox(b.Bounds.Center, size: b.Bounds.Size, color: System.Drawing.Color.FromArgb(100, color), shouldFill: true);
+                d.DrawBox(b.Bounds.Center, size: b.Bounds.Size, color: color, shouldFill: false);
                 // d.DrawX(b.Bounds.Center, size: b.Bounds.Size, color: System.Drawing.Color.Lime);
 
                 foreach (var n in b.Neighbors_Below)

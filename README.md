@@ -12,7 +12,7 @@ Extract Tabular Data from Cad Drawing Files
     - [x] Locate Text within a Table Cell
     - [x] Identify Merged Cells
     - [x] Identify Tables (not touching)
-    - [ ] Partition Separate Tables (even if touching)
+    - [x] Partition Separate Tables (even if touching)
 - [x] Preview Extracted Tables
 - [ ] Generate a .cvs file (without merged cells)
 - [ ] Generate a .xlsx file (with merged cells)

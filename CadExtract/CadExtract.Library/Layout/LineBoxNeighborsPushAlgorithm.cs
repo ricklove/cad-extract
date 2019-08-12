@@ -109,23 +109,33 @@ namespace CadExtract.Library.Layout
 
         }
 
-        private static void AssignTables(List<LineBoxNeighbors> boxes)
+        private static void AssignTables(List<LineBoxNeighbors> boxes, int maxIterations = 100)
         {
             for (var i = 0; i < boxes.Count; i++)
             {
                 boxes[i].TableId = i;
             }
 
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < maxIterations; i++)
             {
                 foreach (var b in boxes)
                 {
-                    b.Neighbors_Above.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                    b.Neighbors_Below.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                    b.Neighbors__Left.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
-                    b.Neighbors_Right.ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                    b.Neighbors_Above.Where(x => IsSameTable(b, x)).ToList().ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                    b.Neighbors_Below.Where(x => IsSameTable(b, x)).ToList().ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                    b.Neighbors__Left.Where(x => IsSameTable(b, x)).ToList().ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
+                    b.Neighbors_Right.Where(x => IsSameTable(b, x)).ToList().ForEach(x => x.TableId = Math.Min(b.TableId, x.TableId));
                 }
             }
+        }
+
+        private static bool IsSameTable(LineBoxNeighbors a, LineBoxNeighbors b)
+        {
+            // Aligned (X or Y)
+            var minDiff = a.Bounds.Min - b.Bounds.Min;
+            var maxDiff = a.Bounds.Max - b.Bounds.Max;
+
+            return Math.Abs(minDiff.X - maxDiff.X) < 0.1f
+                || Math.Abs(minDiff.Y - maxDiff.Y) < 0.1f;
         }
     }
 }
