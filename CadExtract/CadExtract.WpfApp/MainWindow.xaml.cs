@@ -43,6 +43,8 @@ namespace CadExtract.WpfApp
             tableData.LineTables_Uncondensed = LineTablesLayout.FindLineTables(tableData.LineBoxNeighbors, shouldCondense: false);
             tableData.LineTables = LineTablesLayout.FindLineTables(tableData.LineBoxNeighbors, shouldCondense: true);
 
+            var dataRowInfo = tableData.LineTables.Select(x => DataRowFinder.FindDataRows(x)).ToList();
+
             Draw_RawView(compRawView, cadData);
             Draw_BoxesView(compBoxesView, cadData, tableData);
             Draw_BoxNeighborsView(compBoxNeighborsView, cadData, tableData);
@@ -260,9 +262,11 @@ namespace CadExtract.WpfApp
 
                 foreach (var b in t.LineBoxes)
                 {
-                    d.DrawBox(b.Box.Bounds.Center, size: b.Box.Bounds.Size, color: System.Drawing.Color.FromArgb(50, System.Drawing.Color.Wheat));
-                    d.DrawBox(b.Box.Bounds.Center, size: b.Box.Bounds.Size, color: System.Drawing.Color.FromArgb(100, System.Drawing.Color.Wheat), shouldFill: false);
-                    d.DrawText(b.CellText, b.Box.Bounds.Center, size: b.Box.Bounds.Size, fontHeight: b.Box.Texts.Min(x => x.FontHeight) * 0.8f, color: System.Drawing.Color.Wheat);
+                    var cellColor = b.IsDataCell ? System.Drawing.Color.White : System.Drawing.Color.LightBlue;
+
+                    d.DrawBox(b.Box.Bounds.Center, size: b.Box.Bounds.Size, color: System.Drawing.Color.FromArgb(50, cellColor));
+                    d.DrawBox(b.Box.Bounds.Center, size: b.Box.Bounds.Size, color: System.Drawing.Color.FromArgb(100, cellColor), shouldFill: false);
+                    d.DrawText(b.CellText, b.Box.Bounds.Center, size: b.Box.Bounds.Size, fontHeight: b.Box.Texts.Min(x => x.FontHeight) * 0.8f, color: cellColor);
                 }
             }
 

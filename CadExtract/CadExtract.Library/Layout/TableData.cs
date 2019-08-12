@@ -47,15 +47,15 @@ namespace CadExtract.Library.Layout
         public List<LineBoxNeighbors> Neighbors__Left { get; set; } = new List<LineBoxNeighbors>();
         public List<LineBoxNeighbors> Neighbors_Right { get; set; } = new List<LineBoxNeighbors>();
 
-        public int Column_Max { get; set; }
+        public int Col_Max { get; set; }
         public int Row_Max { get; set; }
 
-        public int Column_Min { get; set; }
+        public int Col_Min { get; set; }
         public int Row_Min { get; set; }
-        public string ColumnRowText => $"C{Column_Min}{(Column_Max != Column_Min ? $"-{Column_Max}" : "")} R{Row_Min}{(Row_Max != Row_Min ? $"-{Row_Max}" : "")}";
+        public string ColumnRowText => $"C{Col_Min}{(Col_Max != Col_Min ? $"-{Col_Max}" : "")} R{Row_Min}{(Row_Max != Row_Min ? $"-{Row_Max}" : "")}";
 
         public int Row_Span => Row_Max - Row_Min + 1;
-        public int Column_Span => Column_Max - Column_Min + 1;
+        public int Col_Span => Col_Max - Col_Min + 1;
 
         public int TableId { get; set; }
     }
@@ -67,9 +67,9 @@ namespace CadExtract.Library.Layout
             _debug_box = box;
             Box = box.Box;
             Row_Min = box.Row_Min;
-            Column_Min = box.Column_Min;
+            Col_Min = box.Col_Min;
             Row_Max = box.Row_Max;
-            Column_Max = box.Column_Max;
+            Col_Max = box.Col_Max;
             TableId = box.TableId;
         }
 
@@ -78,18 +78,19 @@ namespace CadExtract.Library.Layout
         public LineBox Box { get; }
         public string CellText => Box.CellText;
 
-        public int Column_Max { get; set; }
+        public int Col_Max { get; set; }
         public int Row_Max { get; set; }
 
-        public int Column_Min { get; set; }
+        public int Col_Min { get; set; }
         public int Row_Min { get; set; }
 
         public int Row_Span => Row_Max - Row_Min + 1;
-        public int Column_Span => Column_Max - Column_Min + 1;
+        public int Col_Span => Col_Max - Col_Min + 1;
 
-        public string ColumnRowText => $"C{Column_Min}{(Column_Max != Column_Min ? $"-{Column_Max}" : "")} R{Row_Min}{(Row_Max != Row_Min ? $"-{Row_Max}" : "")}";
+        public string ColumnRowText => $"C{Col_Min}{(Col_Max != Col_Min ? $"-{Col_Max}" : "")} R{Row_Min}{(Row_Max != Row_Min ? $"-{Row_Max}" : "")}";
 
         public int TableId { get; set; }
+        public bool IsDataCell { get; set; }
 
         public override string ToString() => $"{CellText} ({ColumnRowText})";
     }

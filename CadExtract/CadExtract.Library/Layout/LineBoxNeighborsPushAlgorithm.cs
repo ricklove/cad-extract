@@ -50,17 +50,19 @@ namespace CadExtract.Library.Layout
         {
             for (var i = 0; i < maxIterations; i++)
             {
+                var hasChanged = false;
+
                 // Push next neighbor ahead
                 foreach (var b in boxes)
                 {
                     foreach (var n in b.Neighbors_Above)
                     {
-                        if (n.Row_Max <= b.Row_Max) { n.Row_Max = b.Row_Max + 1; }
+                        if (n.Row_Max <= b.Row_Max) { n.Row_Max = b.Row_Max + 1; hasChanged = true; }
                     }
 
                     foreach (var n in b.Neighbors_Right)
                     {
-                        if (n.Column_Max <= b.Column_Max) { n.Column_Max = b.Column_Max + 1; }
+                        if (n.Col_Max <= b.Col_Max) { n.Col_Max = b.Col_Max + 1; hasChanged = true; }
                     }
                 }
 
@@ -69,18 +71,20 @@ namespace CadExtract.Library.Layout
                 {
                     var n = b;
 
-                    n = b.Neighbors_Above.OrderByDescending(x => x.Column_Max).FirstOrDefault();
-                    if (n != null && n.Column_Max < b.Column_Max) { n.Column_Max = b.Column_Max; }
+                    n = b.Neighbors_Above.OrderByDescending(x => x.Col_Max).FirstOrDefault();
+                    if (n != null && n.Col_Max < b.Col_Max) { n.Col_Max = b.Col_Max; hasChanged = true; }
 
-                    n = b.Neighbors_Below.OrderByDescending(x => x.Column_Max).FirstOrDefault();
-                    if (n != null && n.Column_Max < b.Column_Max) { n.Column_Max = b.Column_Max; }
+                    n = b.Neighbors_Below.OrderByDescending(x => x.Col_Max).FirstOrDefault();
+                    if (n != null && n.Col_Max < b.Col_Max) { n.Col_Max = b.Col_Max; hasChanged = true; }
 
                     n = b.Neighbors__Left.OrderByDescending(x => x.Row_Max).FirstOrDefault();
-                    if (n != null && n.Row_Max < b.Row_Max) { n.Row_Max = b.Row_Max; }
+                    if (n != null && n.Row_Max < b.Row_Max) { n.Row_Max = b.Row_Max; hasChanged = true; }
 
                     n = b.Neighbors_Right.OrderByDescending(x => x.Row_Max).FirstOrDefault();
-                    if (n != null && n.Row_Max < b.Row_Max) { n.Row_Max = b.Row_Max; }
+                    if (n != null && n.Row_Max < b.Row_Max) { n.Row_Max = b.Row_Max; hasChanged = true; }
                 }
+
+                if (!hasChanged) { break; }
             }
 
             // Set Max Col, Row
@@ -91,17 +95,17 @@ namespace CadExtract.Library.Layout
                     .Concat(b.Neighbors_Right.Select(n => n.Row_Max))
                     .Concat(b.Neighbors__Left.Select(n => n.Row_Max))
                     .Min();
-                b.Column_Min = new int[] { b.Column_Max }
-                    .Concat(b.Neighbors__Left.Select(n => n.Column_Max + 1))
-                    .Concat(b.Neighbors_Above.Select(n => n.Column_Max))
-                    .Concat(b.Neighbors_Below.Select(n => n.Column_Max))
+                b.Col_Min = new int[] { b.Col_Max }
+                    .Concat(b.Neighbors__Left.Select(n => n.Col_Max + 1))
+                    .Concat(b.Neighbors_Above.Select(n => n.Col_Max))
+                    .Concat(b.Neighbors_Below.Select(n => n.Col_Max))
                     .Min();
             }
 
             // Assert that min and max are in correct order
             foreach (var b in boxes)
             {
-                if (b.Column_Min > b.Column_Max
+                if (b.Col_Min > b.Col_Max
                     || b.Row_Min > b.Row_Max)
                 {
                     throw new Exception("The algorithm failed");
@@ -117,8 +121,12 @@ namespace CadExtract.Library.Layout
                 boxes[i].TableId = i;
             }
 
+            var hasChanged = false;
+
             for (var i = 0; i < maxIterations; i++)
             {
+                hasChanged = false;
+
                 foreach (var b in boxes)
                 {
                     AssignTableIfAlignedBounds(b, b.Neighbors_Above);
@@ -126,6 +134,8 @@ namespace CadExtract.Library.Layout
                     AssignTableIfAlignedBounds(b, b.Neighbors__Left);
                     AssignTableIfAlignedBounds(b, b.Neighbors_Right);
                 }
+
+                if (!hasChanged) { break; }
             }
 
             bool IsAlignedTableBounds(Bounds a, Bounds b)
@@ -149,6 +159,8 @@ namespace CadExtract.Library.Layout
                 {
                     x.TableId = id;
                 }
+
+                hasChanged = true;
             }
         }
 

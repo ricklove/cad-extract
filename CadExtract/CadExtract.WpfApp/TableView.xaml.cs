@@ -24,7 +24,7 @@ namespace CadExtract.WpfApp
                 root.RowDefinitions.Clear();
                 root.Children.Clear();
 
-                var cMax = _table.LineBoxes.Max(x => x.Column_Max);
+                var cMax = _table.LineBoxes.Max(x => x.Col_Max);
                 var rMax = _table.LineBoxes.Max(x => x.Row_Max);
 
                 for (var i = 0; i <= cMax + 1; i++)
@@ -53,11 +53,11 @@ namespace CadExtract.WpfApp
 
                 foreach (var b in _table.LineBoxes)
                 {
-                    var t = new TextBox() { Text = b.CellText, TextWrapping = System.Windows.TextWrapping.Wrap, MaxWidth = 100 * b.Column_Span };
+                    var t = new TextBox() { Text = b.CellText, TextWrapping = System.Windows.TextWrapping.Wrap, MaxWidth = 100 * b.Col_Span };
                     t.SetValue(Grid.RowProperty, rMax - b.Row_Max + 1);
-                    t.SetValue(Grid.ColumnProperty, b.Column_Min + 1);
+                    t.SetValue(Grid.ColumnProperty, b.Col_Min + 1);
                     t.SetValue(Grid.RowSpanProperty, b.Row_Span);
-                    t.SetValue(Grid.ColumnSpanProperty, b.Column_Span);
+                    t.SetValue(Grid.ColumnSpanProperty, b.Col_Span);
                     root.Children.Add(t);
                 }
             }
