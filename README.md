@@ -18,7 +18,7 @@ Extract Tabular Data from Cad Drawing Files
 - [ ] Table Data Extration
     - [x] Table Patterns
     - [x] Sample Table Patterns
-    - [ ] Preview Table Data (In Situ)
+    - [x] Preview Table Pattern Data (In Situ)
     - [ ] Table Pattern Editor
 - [x] Preview Extracted Tables
 - [x] Preview Extracted Tables (in Situ)
@@ -34,6 +34,7 @@ Extract Tabular Data from Cad Drawing Files
 ## Bugs
 
 - [x] Cell Column and Row should work for multiple neighbor connections
+- [ ] Top Header Cell does not get full column span
 
 ## License
 

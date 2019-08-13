@@ -20,7 +20,7 @@ namespace CadExtract.Library.TablePatterns
 
             public bool HasLinearProgression { get; set; }
 
-            public string AllCellText => Cells.Select(x => x.CellText).Reverse().ConcatString();
+            public string AllCellText => Cells.OrderByDescending(c => c.Row_Max).Select(x => x.CellText).ConcatString();
             public override string ToString() => AllCellText;
         }
 
@@ -32,7 +32,7 @@ namespace CadExtract.Library.TablePatterns
 
             public bool IsDataRow { get; set; }
 
-            public string AllCellText => Cells.Select(x => x.CellText).ConcatString();
+            public string AllCellText => Cells.OrderBy(c => c.Col_Min).Select(x => x.CellText).ConcatString();
             public override string ToString() => AllCellText;
         }
 

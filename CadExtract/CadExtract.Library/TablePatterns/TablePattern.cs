@@ -45,8 +45,8 @@ namespace CadExtract.Library.TablePatterns
                 {
                     Name = title,
                     IsRequired = isRequired,
-                    ColumnMatchPattern = "(?:" + columnMatches.Select(x => $"(?:{x})").ConcatString("|") + ")",
-                    ValueMatchPattern = "(?:" + valueMatches.Select(x => $"(?:{x})").ConcatString("|") + ")",
+                    ColumnMatchPattern = "(?:" + columnMatches.Select(x => $"(?:{x})").ConcatString("|").Replace("  ", " ").Replace("  ", " ").Replace(" ", "\\s+") + ")",
+                    ValueMatchPattern = "(?:" + valueMatches.Select(x => $"(?:{x})").ConcatString("|").Replace("  ", " ").Replace("  ", " ").Replace(" ", "\\s+") + ")",
                 };
             }).ToList();
 

@@ -34,11 +34,14 @@
             <TabItem Header="Tables">
                 <TabControl x:Name="compTables"/>
             </TabItem>
+            <TabItem Header="Tables (in Drawing)">
+                <dc:DebugCanvasComponent x:Name="compTablesInDrawing" WorldBoundsChanged="OnWorldBoundsChanged" Click="OnDrawingClick"/>
+            </TabItem>
             <TabItem Header="Tables (Data)">
                 <TabControl x:Name="compTablesData"/>
             </TabItem>
             <TabItem Header="Tables (in Drawing)">
-                <dc:DebugCanvasComponent x:Name="compTablesInDrawing" WorldBoundsChanged="OnWorldBoundsChanged" Click="OnDrawingClick"/>
+                <dc:DebugCanvasComponent x:Name="compTableDataInDrawing" WorldBoundsChanged="OnWorldBoundsChanged" Click="OnDrawingClick"/>
             </TabItem>
         </TabControl>
     </Grid>

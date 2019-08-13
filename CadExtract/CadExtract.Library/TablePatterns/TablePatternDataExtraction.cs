@@ -1,4 +1,5 @@
-﻿using CadExtract.Library.Layout;
+﻿using CadExtract.Library.Geometry;
+using CadExtract.Library.Layout;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +12,13 @@ namespace CadExtract.Library.TablePatterns
             var tableInfo = TableDataRowFinder.FindDataRowsAndColumns(table);
             var columnPatterns = AssignColumns(pattern, tableInfo);
 
-            var columns = columnPatterns.Select(x => new TableDataColumn() { Name = x.Key.Name }).ToList();
+            if (columnPatterns.Any(x => x.Key.IsRequired && x.Value == null)) { return null; }
+
+            var columns = columnPatterns.Select(x => new TableDataColumn()
+            {
+                Name = x.Key.Name,
+                SourceBounds = x.Value?.Cells.Where(c => c.Col_Span == 1).Select(c => c.Box.Bounds).Where(b => b != new Bounds()).UnionBounds() ?? new Bounds(),
+            }).ToList();
 
             var rows = tableInfo.Rows.Select(row =>
               {
@@ -31,6 +38,8 @@ namespace CadExtract.Library.TablePatterns
                           {
                               Column = column,
                               Value = v.Cell.CellText,
+                              SourceBounds = v.Cell.Box.Bounds,
+                              FontHeight = v.Cell.Box.Texts.Average(x => x.FontHeight),
                           };
                       }).Where(x => x != null).ToList()
                   };
@@ -40,8 +49,12 @@ namespace CadExtract.Library.TablePatterns
                   return rowOut;
               }).Where(x => x != null).ToList();
 
+            // columns.ForEach(col => col.SourceBounds = rows.SelectMany(x => x.Values).Where(v => v.Column == col).Select(x => x.SourceBounds).UnionBounds());
+            // columns.ForEach(col => col.SourceHeaderText =  rows.SelectMany(x => x.Values).Where(v => v.Column == col).Select(x => x.SourceBounds).UnionBounds());
+
             return new TableData()
             {
+                SourceBounds = table.Bounds,
                 TableName = pattern.Name,
                 Rows = rows,
                 Columns = columns,

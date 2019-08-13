@@ -66,6 +66,8 @@ namespace CadExtract.Library.Geometry
         public bool Contains(Vector2 center) => Contains(Bounds.FromCenterSize(center, new Vector2(0, 0)));
 
         public override string ToString() => $"({Min})->({Max})";
+        public static bool operator ==(Bounds a, Bounds b) => a.Equals(b);
+        public static bool operator !=(Bounds a, Bounds b) => !a.Equals(b);
     }
 
     public static class Bounds_Ext
