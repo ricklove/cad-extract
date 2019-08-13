@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CadExtract.Library.Layout
 {
-    public class TableData
+    public class LineTableData
     {
         public List<LineBox> LineBoxes { get; set; }
         public List<LineBoxNeighbors> LineBoxNeighbors { get; set; }
@@ -99,5 +99,6 @@ namespace CadExtract.Library.Layout
     {
         public int TableId { get; set; }
         public List<LineBoxCell> LineBoxes { get; set; }
+        public Bounds Bounds { get; set; }
     }
 }

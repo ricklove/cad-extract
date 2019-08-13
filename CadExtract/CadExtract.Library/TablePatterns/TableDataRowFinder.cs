@@ -1,40 +1,69 @@
-﻿using System;
+﻿using CadExtract.Library.Layout;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CadExtract.Library.Layout
+namespace CadExtract.Library.TablePatterns
 {
-    public static class DataRowFinder
+    public static class TableDataRowFinder
     {
-        public class DataColInfo
+        public class TableInfo
+        {
+            public List<ColInfo> Cols { get; set; }
+            public List<RowInfo> Rows { get; set; }
+        }
+
+        public class ColInfo
         {
             public int Col { get; set; }
             public List<LineBoxCell> Cells { get; set; }
 
             public bool HasLinearProgression { get; set; }
+
+            public string AllCellText => Cells.Select(x => x.CellText).Reverse().ConcatString();
+            public override string ToString() => AllCellText;
         }
 
-        public class DataRowInfo
+        public class RowInfo
         {
             public int Row { get; set; }
             public List<LineBoxCell> Cells { get; set; }
+            public List<ValueInfo> Values { get; set; }
 
             public bool IsDataRow { get; set; }
+
+            public string AllCellText => Cells.Select(x => x.CellText).ConcatString();
+            public override string ToString() => AllCellText;
         }
 
-        public static List<DataRowInfo> FindDataRows(LineTable table)
+        public class ValueInfo
+        {
+            public List<ColInfo> Cols { get; set; }
+            public LineBoxCell Cell { get; set; }
+        }
+
+        public static TableInfo FindDataRowsAndColumns(LineTable table)
         {
             var rMax = table.LineBoxes.Max(x => x.Row_Max);
             var cMax = table.LineBoxes.Max(x => x.Col_Max);
 
-            var rows = Enumerable.Range(0, rMax + 1).Select(r => new DataRowInfo { Row = r, Cells = table.LineBoxes.Where(x => r >= x.Row_Min && r <= x.Row_Max).OrderBy(x => x.Col_Min).ToList() }).ToList();
-            var cols = Enumerable.Range(0, cMax + 1).Select(c => new DataColInfo { Col = c, Cells = table.LineBoxes.Where(x => c >= x.Col_Min && c <= x.Col_Max).OrderBy(x => x.Row_Min).ToList() }).ToList();
-
+            var cols = Enumerable.Range(0, cMax + 1).Select(c => new ColInfo { Col = c, Cells = table.LineBoxes.Where(x => c >= x.Col_Min && c <= x.Col_Max).OrderBy(x => x.Row_Min).ToList() }).ToList();
+            var rows = Enumerable.Range(0, rMax + 1).Select(r => new RowInfo { Row = r, Cells = table.LineBoxes.Where(x => r >= x.Row_Min && r <= x.Row_Max).OrderBy(x => x.Col_Min).ToList() }).ToList();
 
             // var rowMatches = rows.Select((row, i) => new { row, matchingRows = rows.Skip(i).Where(r2 => IsSimilarRow(row, r2)).ToList() }).ToList();
 
+            // Add row values
+            foreach (var row in rows)
+            {
+                row.Values = row.Cells.Select(x => new ValueInfo
+                {
+                    Cell = x,
+                    Cols = cols.Where(y => y.Cells.Contains(x)).ToList()
+                }).ToList();
+            }
 
-            var rowClusters = rows.Select(x => new List<DataRowInfo>() { x }).ToList();
+            // Identify Data Rows
+            var rowClusters = rows.Select(x => new List<RowInfo>() { x }).ToList();
 
             for (var i = 0; i < rowClusters.Count; i++)
             {
@@ -57,10 +86,10 @@ namespace CadExtract.Library.Layout
                 topCluster.ForEach(x => x.Cells.ForEach(y => y.IsDataCell = true));
             }
 
-            return rows;
+            return new TableInfo() { Cols = cols, Rows = rows };
         }
 
-        private static bool IsSimilarRow(DataRowInfo aRow, DataRowInfo bRow)
+        private static bool IsSimilarRow(RowInfo aRow, RowInfo bRow)
         {
             var cMax = aRow.Cells.Concat(bRow.Cells).Max(x => x.Col_Max);
 

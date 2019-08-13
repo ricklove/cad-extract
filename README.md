@@ -15,6 +15,11 @@ Extract Tabular Data from Cad Drawing Files
     - [x] Partition Separate Tables (even if touching)
     - [x] Identify Data Rows
     - [ ] Identify Column Names
+- [ ] Table Data Extration
+    - [x] Table Patterns
+    - [x] Sample Table Patterns
+    - [ ] Preview Table Data (In Situ)
+    - [ ] Table Pattern Editor
 - [x] Preview Extracted Tables
 - [x] Preview Extracted Tables (in Situ)
 - [ ] Generate a .csv file (without merged cells)

@@ -1,7 +1,7 @@
 ﻿using CadExtract.Library;
-using CadExtract.Library.Geometry;
 using CadExtract.Library.Importers;
 using CadExtract.Library.Layout;
+using CadExtract.Library.TablePatterns;
 using DebugCanvasWpf.DotNetFramework;
 using System;
 using System.Linq;
@@ -11,6 +11,9 @@ namespace CadExtract.WpfApp
 {
     public partial class MainWindow : Window
     {
+        private CadData _cadData;
+        private LineTableData _tableData;
+
         public MainWindow() => InitializeComponent();
 
         private void OnWorldBoundsChanged(object sender, EventArgs e)
@@ -39,23 +42,32 @@ namespace CadExtract.WpfApp
         {
             var filePath = txtFilePath.Text;
             var cadData = NetDxfImporter.Import(filePath);
-            var tableData = new TableData() { LineBoxes = LineBoxFinder.FindLineBoxesWithTexts(cadData.Lines, cadData.Texts, cadData.Circles) };
-            tableData.LineBoxNeighbors = LineBoxNeighborsPushAlgorithm.Solve(tableData.LineBoxes);
-            tableData.LineTables_Uncondensed = LineTablesLayout.FindLineTables(tableData.LineBoxNeighbors, shouldCondense: false);
-            tableData.LineTables = LineTablesLayout.FindLineTables(tableData.LineBoxNeighbors, shouldCondense: true);
+            var lineTableData = new LineTableData() { LineBoxes = LineBoxFinder.FindLineBoxesWithTexts(cadData.Lines, cadData.Texts, cadData.Circles) };
+            lineTableData.LineBoxNeighbors = LineBoxNeighborsPushAlgorithm.Solve(lineTableData.LineBoxes);
+            lineTableData.LineTables_Uncondensed = LineTablesLayout.FindLineTables(lineTableData.LineBoxNeighbors, shouldCondense: false);
+            lineTableData.LineTables = LineTablesLayout.FindLineTables(lineTableData.LineBoxNeighbors, shouldCondense: true);
 
-            var dataRowInfo = tableData.LineTables.Select(x => DataRowFinder.FindDataRows(x)).ToList();
+            var patterns = new[] { TablePattern_Samples.BomPattern, TablePattern_Samples.WireHarnessPattern };
+            var dataTables = patterns.SelectMany(p => lineTableData.LineTables.Select(lineTable => TablePatternDataExtraction.ExtractTable(lineTable, p))).Where(x => x.Rows.Any()).ToList();
+
+            var dataRowInfo = lineTableData.LineTables.Select(x => TableDataRowFinder.FindDataRowsAndColumns(x)).ToList();
 
             Draw_RawView(compRawView, cadData);
-            Draw_BoxesView(compBoxesView, cadData, tableData);
-            Draw_BoxNeighborsView(compBoxNeighborsView, cadData, tableData);
-            Draw_TablesInDrawing(compTablesInDrawing, cadData, tableData);
+            Draw_BoxesView(compBoxesView, cadData, lineTableData);
+            Draw_BoxNeighborsView(compBoxNeighborsView, cadData, lineTableData);
+            Draw_TablesInDrawing(compTablesInDrawing, cadData, lineTableData);
 
             compTablesUncondensed.Items.Clear();
-            tableData.LineTables_Uncondensed.ForEach(x => compTablesUncondensed.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableId}", Content = new TableView() { Table = x } }));
+            lineTableData.LineTables_Uncondensed.ForEach(x => compTablesUncondensed.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableId}", Content = new LineTableView() { Table = x } }));
 
             compTables.Items.Clear();
-            tableData.LineTables.ForEach(x => compTables.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableId}", Content = new TableView() { Table = x } }));
+            lineTableData.LineTables.ForEach(x => compTables.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableId}", Content = new LineTableView() { Table = x } }));
+
+            compTablesData.Items.Clear();
+            dataTables.ForEach(x => compTablesData.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableName}", Content = new TableDataView() { Table = x } }));
+
+            _cadData = cadData;
+            _tableData = lineTableData;
         }
 
         private void Draw_RawView(DebugCanvasComponent view, CadData cadData)
@@ -89,7 +101,7 @@ namespace CadExtract.WpfApp
             view.Render();
         }
 
-        private void Draw_BoxesView(DebugCanvasComponent view, CadData cadData, TableData tableData)
+        private void Draw_BoxesView(DebugCanvasComponent view, CadData cadData, LineTableData tableData)
         {
             var d = view.DrawingData;
             d.ClearDrawings();
@@ -134,7 +146,7 @@ namespace CadExtract.WpfApp
             view.Render();
         }
 
-        private void Draw_BoxNeighborsView(DebugCanvasComponent view, CadData cadData, TableData tableData)
+        private void Draw_BoxNeighborsView(DebugCanvasComponent view, CadData cadData, LineTableData tableData)
         {
             var d = view.DrawingData;
             d.ClearDrawings();
@@ -196,7 +208,7 @@ namespace CadExtract.WpfApp
         }
 
 
-        private void Draw_TablesInDrawing(DebugCanvasComponent view, CadData cadData, TableData tableData)
+        private void Draw_TablesInDrawing(DebugCanvasComponent view, CadData cadData, LineTableData tableData, LineTable highlightTable = null)
         {
             var d = view.DrawingData;
             d.ClearDrawings();
@@ -256,9 +268,11 @@ namespace CadExtract.WpfApp
 
             foreach (var t in tableData.LineTables)
             {
-                var tBounds = t.LineBoxes.Select(x => x.Box.Bounds).UnionBounds();
+                var alphaMult = highlightTable == null ? 4 : highlightTable == t ? 4 : 1;
+
+                var tBounds = t.Bounds;
                 var color = ColorExtensions.RandomColor(t.TableId.GetHashCode());
-                d.DrawBox(tBounds.Center, size: tBounds.Size, color: System.Drawing.Color.FromArgb(50, color), shouldFill: true);
+                d.DrawBox(tBounds.Center, size: tBounds.Size, color: System.Drawing.Color.FromArgb(12 * alphaMult, color), shouldFill: true);
                 d.DrawBox(tBounds.Center, size: tBounds.Size, color: color, shouldFill: false);
                 d.DrawBox(tBounds.Center, size: tBounds.Size + new System.Numerics.Vector2(0.1f, 0.1f), color: color, shouldFill: false);
 
@@ -273,6 +287,14 @@ namespace CadExtract.WpfApp
             }
 
             view.Render();
+        }
+
+        private void OnDrawingClick(object sender, DebugCanvasComponent.ClickEventArgs e)
+        {
+            if (sender != compTablesInDrawing) { return; }
+
+            var closestTable = _tableData.LineTables.OrderBy(x => (x.Bounds.Center - e.WorldPosition).LengthSquared()).FirstOrDefault();
+            Draw_TablesInDrawing(compTablesInDrawing, _cadData, _tableData, closestTable);
         }
     }
 }

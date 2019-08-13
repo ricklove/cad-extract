@@ -75,8 +75,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ColorExtensions.cs" />
-    <Compile Include="TableView.xaml.cs">
-      <DependentUpon>TableView.xaml</DependentUpon>
+    <Compile Include="LineTableView.xaml.cs">
+      <DependentUpon>LineTableView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TableDataView.xaml.cs">
+      <DependentUpon>TableDataView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -90,7 +93,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="TableView.xaml">
+    <Page Include="LineTableView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TableDataView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

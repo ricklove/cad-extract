@@ -8,10 +8,10 @@ namespace CadExtract.WpfApp
     /// <summary>
     /// Interaction logic for TableView.xaml
     /// </summary>
-    public partial class TableView : UserControl
+    public partial class LineTableView : UserControl
     {
 
-        public TableView() => InitializeComponent();
+        public LineTableView() => InitializeComponent();
 
         private LineTable _table;
         public LineTable Table { get => _table; set { _table = value; Populate(); } }

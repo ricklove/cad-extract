@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CadExtract.Library.Geometry;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CadExtract.Library.Layout
@@ -10,7 +11,8 @@ namespace CadExtract.Library.Layout
             var tables = boxes.GroupBy(x => x.TableId).Select(g => new LineTable()
             {
                 LineBoxes = g.Where(x => !x.CellText.IsNullOrEmpty()).Select(x => new LineBoxCell(x)).ToList(),
-                TableId = g.Key
+                TableId = g.Key,
+                Bounds = g.Select(x => x.Box.Bounds).UnionBounds(),
             }).Where(x => x.LineBoxes.Count > 0).ToList();
 
             if (shouldCondense)

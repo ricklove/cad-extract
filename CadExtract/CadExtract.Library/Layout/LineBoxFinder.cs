@@ -7,7 +7,7 @@ namespace CadExtract.Library.Layout
 {
     public static class LineBoxFinder
     {
-        public static List<LineBox> FindLineBoxesWithTexts(List<CadLine> lines, List<CadText> texts, List<CadCircle> circles_excludeText, float rounding = 0.01f)
+        public static List<LineBox> FindLineBoxesWithTexts(List<CadLine> lines, List<CadText> texts, List<CadCircle> circles_excludeText, float rounding = 0.025f)
         {
             var boxes = FindLineBoxes(lines, rounding);
 
