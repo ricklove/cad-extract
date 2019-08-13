@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CadExtract.Library.Layout
@@ -48,7 +49,7 @@ namespace CadExtract.Library.Layout
                 }
             }
 
-            var topCluster = rowClusters.OrderBy(x => x.Count).FirstOrDefault();
+            var topCluster = rowClusters.OrderByDescending(x => x.Count).FirstOrDefault();
 
             if (topCluster.Count > 1)
             {
@@ -63,7 +64,7 @@ namespace CadExtract.Library.Layout
         {
             var cMax = aRow.Cells.Concat(bRow.Cells).Max(x => x.Col_Max);
 
-            var matchCount = 0;
+            var matchScore = 0.0f;
             var attemptCount = 0;
 
             for (var c = 0; c < cMax; c++)
@@ -71,37 +72,54 @@ namespace CadExtract.Library.Layout
                 var a = aRow.Cells.Where(x => c >= x.Col_Min && c <= x.Col_Max).FirstOrDefault();
                 var b = bRow.Cells.Where(x => c >= x.Col_Min && c <= x.Col_Max).FirstOrDefault();
 
-                if (a == null || b == null) { continue; }
+                if (a == null && b == null) { continue; }
 
                 attemptCount++;
-
-                if (IsSimilarValue(a.CellText, b.CellText))
-                {
-                    matchCount++;
-                }
+                matchScore += SimilarityScore(a?.CellText, b?.CellText);
             }
 
-            return matchCount * 1.0f / attemptCount > 0.75f;
+            return matchScore * 1.0f / attemptCount > 0.75f;
         }
 
         private static readonly char[] _ignoreSymbols = ",.".ToCharArray();
-        private static bool IsSimilarValue(string a, string b)
+        public static float SimilarityScore(string a, string b)
         {
-            if (int.TryParse(a, out _) && int.TryParse(b, out _)) { return true; }
+            if (a.IsNullOrEmpty() && b.IsNullOrEmpty()) { return 1f; }
+            if (a.IsNullOrEmpty() || b.IsNullOrEmpty()) { return 0; }
+            if (a == b) { return 3; }
+
+            if (int.TryParse(a, out var aInt) && int.TryParse(b, out var bInt))
+            {
+                if (Math.Abs(aInt - bInt) <= 1) { return 5; }
+                return 3;
+            }
+
+            if (decimal.TryParse(a, out _) && decimal.TryParse(b, out _))
+            {
+                return 3;
+            }
+
+            if (DateTime.TryParse(a, out _) && DateTime.TryParse(b, out _))
+            {
+                return 5;
+            }
 
             if (a.Any(x => char.IsDigit(x))
-                != b.Any(x => char.IsDigit(x))) { return false; }
+                != b.Any(x => char.IsDigit(x))) { return 0; }
 
-            if (a.Except(_ignoreSymbols).Any(x => char.IsSymbol(x))
-                != b.Except(_ignoreSymbols).Any(x => char.IsSymbol(x))) { return false; }
+            //if (a.Except(_ignoreSymbols).Any(x => char.IsSymbol(x))
+            //    != b.Except(_ignoreSymbols).Any(x => char.IsSymbol(x))) { return 0; }
 
-            if (a.Any(x => char.IsUpper(x))
-                != b.Any(x => char.IsUpper(x))) { return false; }
+            //if (a.Any(x => char.IsUpper(x))
+            //    != b.Any(x => char.IsUpper(x))) { return 0; }
 
-            if (a.Any(x => char.IsLower(x))
-                != b.Any(x => char.IsLower(x))) { return false; }
+            //if (a.Any(x => char.IsLower(x))
+            //    != b.Any(x => char.IsLower(x))) { return 0; }
 
-            return true;
+            var lenDiff = Math.Abs(a.Length - b.Length);
+            var lenDiffCutoff = Math.Max(5, Math.Min(a.Length / 2, b.Length / 2));
+
+            return lenDiff <= lenDiffCutoff ? 1 : 0;
         }
 
         private static bool HasLinearProgression(IEnumerable<int> values)

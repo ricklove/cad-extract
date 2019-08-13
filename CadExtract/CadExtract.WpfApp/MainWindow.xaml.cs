@@ -16,7 +16,8 @@ namespace CadExtract.WpfApp
         private void OnWorldBoundsChanged(object sender, EventArgs e)
         {
             var worldBounds = compRawView.WorldBounds;
-            if (sender == compBoxesView) { worldBounds = compRawView.WorldBounds; }
+            if (sender == compRawView) { worldBounds = compRawView.WorldBounds; }
+            if (sender == compBoxesView) { worldBounds = compBoxesView.WorldBounds; }
             if (sender == compBoxNeighborsView) { worldBounds = compBoxNeighborsView.WorldBounds; }
             if (sender == compTablesInDrawing) { worldBounds = compTablesInDrawing.WorldBounds; }
 
@@ -259,6 +260,7 @@ namespace CadExtract.WpfApp
                 var color = ColorExtensions.RandomColor(t.TableId.GetHashCode());
                 d.DrawBox(tBounds.Center, size: tBounds.Size, color: System.Drawing.Color.FromArgb(50, color), shouldFill: true);
                 d.DrawBox(tBounds.Center, size: tBounds.Size, color: color, shouldFill: false);
+                d.DrawBox(tBounds.Center, size: tBounds.Size + new System.Numerics.Vector2(0.1f, 0.1f), color: color, shouldFill: false);
 
                 foreach (var b in t.LineBoxes)
                 {

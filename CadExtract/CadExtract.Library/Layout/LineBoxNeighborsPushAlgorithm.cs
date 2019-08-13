@@ -129,10 +129,10 @@ namespace CadExtract.Library.Layout
 
                 foreach (var b in boxes)
                 {
-                    AssignTableIfAlignedBounds(b, b.Neighbors_Above);
-                    AssignTableIfAlignedBounds(b, b.Neighbors_Below);
-                    AssignTableIfAlignedBounds(b, b.Neighbors__Left);
-                    AssignTableIfAlignedBounds(b, b.Neighbors_Right);
+                    AssignTableIfSimilar(b, b.Neighbors_Above, checkContents: true);
+                    AssignTableIfSimilar(b, b.Neighbors_Below, checkContents: true);
+                    AssignTableIfSimilar(b, b.Neighbors__Left, checkContents: false);
+                    AssignTableIfSimilar(b, b.Neighbors_Right, checkContents: false);
                 }
 
                 if (!hasChanged) { break; }
@@ -144,14 +144,21 @@ namespace CadExtract.Library.Layout
                 var minDiff = a.Min - b.Min;
                 var maxDiff = a.Max - b.Max;
 
-                return Math.Abs(minDiff.X - maxDiff.X) < 0.1f
-                    || Math.Abs(minDiff.Y - maxDiff.Y) < 0.1f;
+                return Math.Abs(minDiff.X - maxDiff.X) < 0.01f
+                    || Math.Abs(minDiff.Y - maxDiff.Y) < 0.01f;
             }
 
-            void AssignTableIfAlignedBounds(LineBoxNeighbors box, List<LineBoxNeighbors> neighbors)
+            bool IsSimilarContents(string a, List<string> b)
+            {
+                return true;
+                // return b.Max(x => DataRowFinder.SimilarityScore(a, x)) >= 1f;
+            }
+
+            void AssignTableIfSimilar(LineBoxNeighbors box, List<LineBoxNeighbors> neighbors, bool checkContents)
             {
                 if (neighbors.GroupBy(x => x.TableId).Count() != 1) { return; }
                 if (!IsAlignedTableBounds(box.Bounds, neighbors.Select(x => x.Bounds).UnionBounds())) { return; }
+                if (checkContents && !IsSimilarContents(box.CellText, neighbors.Select(x => x.CellText).ToList())) { return; }
 
                 var id = Math.Min(neighbors.First().TableId, box.TableId);
                 box.TableId = id;
