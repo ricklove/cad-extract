@@ -135,7 +135,7 @@ namespace CadExtract.Library.Importers
                 Debug_Raw = x,
                 Circle = new Geometry.Circle(x.Transform(x.Value.Center.ToGeometryVector()).X,
                     x.Transform(x.Value.Center.ToGeometryVector()).Y,
-                    x.Transform(new System.Numerics.Vector2((float)x.Value.Radius, (float)x.Value.Radius)).X),
+                    Math.Abs(x.Transform(new System.Numerics.Vector2((float)x.Value.Radius, (float)x.Value.Radius)).X - x.Transform(new System.Numerics.Vector2(0, 0)).X)),
                 Context = GetContextPath(x),
             }).ToList();
 
