@@ -21,7 +21,7 @@ Extract Tabular Data from Cad Drawing Files
     - [x] Sample Table Patterns
     - [x] Preview Table Pattern Data (In Situ)
     - [ ] Table Pattern Editor
-    - [ ] Table Pattern Extraction (from scanning multiple drawings)
+    - [ ] Table Pattern Discovery (from scanning multiple drawings)
 - [x] Preview Extracted Tables
 - [x] Preview Extracted Tables (in Situ)
 - [x] Copy to Clipboard in Excel Format (Html Format)

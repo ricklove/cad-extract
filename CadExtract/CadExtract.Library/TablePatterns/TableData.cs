@@ -1,5 +1,6 @@
 ﻿using CadExtract.Library.Geometry;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CadExtract.Library.TablePatterns
 {
@@ -10,6 +11,8 @@ namespace CadExtract.Library.TablePatterns
         public List<TableDataRow> Rows { get; set; }
         public Bounds SourceBounds { get; set; }
         public Bounds SourceBounds_Cropped { get; set; }
+
+        public override string ToString() => $"{TableName}";
     }
 
     public class TableDataColumn
@@ -17,11 +20,15 @@ namespace CadExtract.Library.TablePatterns
         public string Name { get; set; }
         public Bounds SourceBounds { get; set; }
         public string SourceHeaderText { get; set; }
+
+        public override string ToString() => $"{Name}";
     }
 
     public class TableDataRow
     {
         public List<TableDataValue> Values { get; set; }
+
+        public override string ToString() => Values.Select(x => $"{x.Column.Name}={x.Value}").ConcatString(" ");
     }
 
     public class TableDataValue
@@ -30,6 +37,8 @@ namespace CadExtract.Library.TablePatterns
         public string Value { get; set; }
         public Bounds SourceBounds { get; set; }
         public float FontHeight { get; set; }
+
+        public override string ToString() => $"{Column.Name}={Value}";
     }
 
 }

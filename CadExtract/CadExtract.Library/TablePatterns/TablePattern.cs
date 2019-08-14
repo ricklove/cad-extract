@@ -113,7 +113,7 @@ namespace CadExtract.Library.TablePatterns
     - (qty|quan)                                                                                                                                  
 	* [0-9]+    
 
-# WireLength              
+# WireLength?              
 
     - (wire|cut|cutting) length
 
