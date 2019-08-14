@@ -21,6 +21,7 @@ namespace CadExtract.Library
             });
             sb.Append("</tr>");
 
+            // Reverse Rows
             foreach (var row in table.Rows.AsEnumerable().Reverse())
             {
                 var values_byColumn = row.Values.ToDictionary(x => table.Columns.IndexOf(x.Column), x => x);
@@ -53,16 +54,18 @@ namespace CadExtract.Library
             var cMax = table.LineBoxes.Max(x => x.Col_Max);
             var rMax = table.LineBoxes.Max(x => x.Row_Max);
 
-            var boxDict = table.LineBoxes.ToLookup(x => new { c = x.Col_Min, r = rMax - x.Row_Max }, x => x);
-
-            for (var r = 0; r <= rMax; r++)
+            // Reverse Rows
+            for (var r = rMax; r >= 0; r--)
             {
                 sb.Append("<tr>");
 
                 for (var c = 0; c <= cMax; c++)
                 {
-                    var boxes = boxDict[new { c, r }];
-                    var v = boxes.FirstOrDefault();
+                    var v = table.LineBoxes.Where(x => x.Col_Min <= c && x.Col_Max >= c && x.Row_Min <= r && x.Row_Max >= r).OrderBy(x => x.Col_Min).ThenBy(x => x.Row_Min).FirstOrDefault();
+
+                    // Skip if in span
+                    if (v?.Col_Min != c || v?.Row_Max != r) { continue; }
+
                     var span = $"{(v?.Row_Span > 1 ? $"rowspan={v.Row_Span}" : "")} {(v?.Col_Span > 1 ? $"colspan={v.Col_Span}" : "")}";
 
                     // Force excel text format
