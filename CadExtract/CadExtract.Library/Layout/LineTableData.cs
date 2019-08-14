@@ -31,6 +31,8 @@ namespace CadExtract.Library.Layout
         }
 
         public LineBox(Bounds bounds) => Bounds = bounds;
+
+        public override string ToString() => $"{Bounds} {CellText}";
     }
 
     public class LineBoxNeighbors

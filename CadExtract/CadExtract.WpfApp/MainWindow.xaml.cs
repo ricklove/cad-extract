@@ -83,11 +83,11 @@ namespace CadExtract.WpfApp
             var d = view.DrawingData;
             d.ClearDrawings();
 
-            for (var i = -100; i <= 100; i++)
-            {
-                d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-                d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-            }
+            //for (var i = -100; i <= 100; i++)
+            //{
+            //    d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //    d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //}
 
             foreach (var l in cadData.Lines)
             {
@@ -106,6 +106,7 @@ namespace CadExtract.WpfApp
                 d.DrawText(t.Text, t.Bounds.Center, size: t.Bounds.Size * new System.Numerics.Vector2(1.2f, 2), fontHeight: t.FontHeight, color: System.Drawing.Color.Wheat);
             }
 
+            d.ZoomToContents();
             view.Render();
         }
 
@@ -114,11 +115,11 @@ namespace CadExtract.WpfApp
             var d = view.DrawingData;
             d.ClearDrawings();
 
-            for (var i = -100; i <= 100; i++)
-            {
-                d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-                d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-            }
+            //for (var i = -100; i <= 100; i++)
+            //{
+            //    d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //    d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //}
 
             foreach (var l in cadData.Lines)
             {
@@ -151,6 +152,7 @@ namespace CadExtract.WpfApp
             //    d.DrawText(t.Text, t.Bounds.Center, size: t.Bounds.Size * new System.Numerics.Vector2(1.2f, 2), fontHeight: t.FontHeight, color: System.Drawing.Color.Wheat);
             //}
 
+            d.ZoomToContents();
             view.Render();
         }
 
@@ -159,11 +161,11 @@ namespace CadExtract.WpfApp
             var d = view.DrawingData;
             d.ClearDrawings();
 
-            for (var i = -100; i <= 100; i++)
-            {
-                d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-                d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-            }
+            //for (var i = -100; i <= 100; i++)
+            //{
+            //    d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //    d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //}
 
             foreach (var l in cadData.Lines)
             {
@@ -212,6 +214,7 @@ namespace CadExtract.WpfApp
                 d.DrawText(t.Text, t.Bounds.Center, size: t.Bounds.Size * new System.Numerics.Vector2(1.2f, 2), fontHeight: t.FontHeight, color: System.Drawing.Color.Wheat);
             }
 
+            d.ZoomToContents();
             view.Render();
         }
 
@@ -221,11 +224,11 @@ namespace CadExtract.WpfApp
             var d = view.DrawingData;
             d.ClearDrawings();
 
-            for (var i = -100; i <= 100; i++)
-            {
-                d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-                d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-            }
+            //for (var i = -100; i <= 100; i++)
+            //{
+            //    d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //    d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //}
 
             //foreach (var l in cadData.Lines)
             //{
@@ -294,6 +297,7 @@ namespace CadExtract.WpfApp
                 }
             }
 
+            d.ZoomToContents();
             view.Render();
         }
 
@@ -302,18 +306,18 @@ namespace CadExtract.WpfApp
             var d = view.DrawingData;
             d.ClearDrawings();
 
-            for (var i = -100; i <= 100; i++)
-            {
-                d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-                d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
-            }
+            //for (var i = -100; i <= 100; i++)
+            //{
+            //    d.DrawLine(new System.Numerics.Vector2(i, -100), new System.Numerics.Vector2(i, 100), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //    d.DrawLine(new System.Numerics.Vector2(-100, i), new System.Numerics.Vector2(100, i), System.Drawing.Color.FromArgb(50, System.Drawing.Color.Gray));
+            //}
 
             //if (highlightTable == null)
             //{
             foreach (var t in cadData.Texts)
             {
                 if (highlightTable != null && highlightTable.SourceBounds.Contains(t.Bounds.Center)) { continue; }
-                var hasMatch = tableData.SelectMany(x => x.Rows.SelectMany(y => y.Values)).Where(v => v.Value == t.Text && v.SourceBounds.Intersects(t.Bounds)).Any();
+                var hasMatch = tableData.SelectMany(x => x.Rows.SelectMany(y => y.Values)).Where(v => v.Value.Contains(t.Text) && v.SourceBounds.Intersects(t.Bounds)).Any();
                 if (hasMatch) { continue; }
 
                 d.DrawBox(t.Bounds.Center, size: t.Bounds.Size, color: System.Drawing.Color.FromArgb(50, System.Drawing.Color.Red));
@@ -345,7 +349,7 @@ namespace CadExtract.WpfApp
 
                     d.DrawBox(bounds.Center, size: bounds.Size, color: System.Drawing.Color.FromArgb(50, cellColor));
                     d.DrawBox(bounds.Center, size: bounds.Size, color: System.Drawing.Color.FromArgb(100, cellColor), shouldFill: false);
-                    d.DrawText(col.Name, bounds.Center, size: bounds.Size, fontHeight: fontHeight * 0.5f, color: cellColor);
+                    d.DrawText(col.Name.Replace("_", " "), bounds.Center, size: bounds.Size, fontHeight: fontHeight * 0.5f, color: cellColor);
                 }
 
                 foreach (var row in t.Rows)
@@ -362,6 +366,7 @@ namespace CadExtract.WpfApp
                 }
             }
 
+            d.ZoomToContents();
             view.Render();
         }
 

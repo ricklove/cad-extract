@@ -143,7 +143,8 @@ namespace CadExtract.Library.TablePatterns
 
     - #1 (terminal|term.) (part|pt.) (no\.?|#|num)
 
-	* ([0-9][0-9A-Za-z]+)-([0-9A-Za-z]+)(?:-[0-9A-Za-z]+)*   
+	* ([0-9][0-9A-Za-z]+)-([0-9A-Za-z]+)(?:-[0-9A-Za-z]+)*
+    * None
 
 # TermA_Description?      
 
@@ -166,6 +167,7 @@ namespace CadExtract.Library.TablePatterns
     - (#2 (terminal|term.) (part|pt.) (no\.?|#|num)|^part (no\.?|#|num))
 
 	* ([0-9][0-9A-Za-z]+)-([0-9A-Za-z]+)(?:-[0-9A-Za-z]+)*   
+    * None
 
 # TermB_Description?      
 
