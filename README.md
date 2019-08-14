@@ -22,6 +22,7 @@ Extract Tabular Data from Cad Drawing Files
     - [x] Preview Table Pattern Data (In Situ)
     - [ ] Table Pattern Editor
     - [ ] Table Pattern Discovery (from scanning multiple drawings)
+    - [ ] Handle Merged Row Cells
 - [x] Preview Extracted Tables
 - [x] Preview Extracted Tables (in Situ)
 - [x] Copy to Clipboard in Excel Format (Html Format)
@@ -41,6 +42,13 @@ Extract Tabular Data from Cad Drawing Files
 - [x] Handle Duplicate Rows because of split cells with markthrough line
 - [ ] Handle Strikethrough Text
 - [x] TableDataView Columns Fields moving to left incorrectly
+- [ ] Handle Merged Rows and Columns in Table Pattern Extraction (Right now it duplicates values, with no indication of merged data)
+
+## Screen Shots
+
+![Raw Preview](media/raw.png?raw=true "Raw Preview")
+![Found Tables](media/tables.png?raw=true "Found Tables")
+![Extracted Data](media/data.png?raw=true "Extracted Data")
 
 ## License
 

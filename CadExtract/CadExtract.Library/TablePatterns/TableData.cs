@@ -35,6 +35,7 @@ namespace CadExtract.Library.TablePatterns
     {
         public TableDataColumn Column { get; set; }
         public string Value { get; set; }
+
         public Bounds SourceBounds { get; set; }
         public float FontHeight { get; set; }
 
