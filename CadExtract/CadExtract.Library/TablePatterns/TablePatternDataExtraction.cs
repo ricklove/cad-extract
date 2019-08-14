@@ -55,6 +55,8 @@ namespace CadExtract.Library.TablePatterns
             return new TableData()
             {
                 SourceBounds = table.Bounds,
+                // SourceBounds = rows.SelectMany(x => x.Values.Select(v => v.SourceBounds)).UnionBounds(),
+                SourceBounds_Cropped = rows.SelectMany(x => x.Values.Select(v => v.SourceBounds)).UnionBounds(),
                 TableName = pattern.Name,
                 Rows = rows,
                 Columns = columns,

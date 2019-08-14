@@ -9,6 +9,7 @@ namespace CadExtract.Library.TablePatterns
         public List<TableDataColumn> Columns { get; set; }
         public List<TableDataRow> Rows { get; set; }
         public Bounds SourceBounds { get; set; }
+        public Bounds SourceBounds_Cropped { get; set; }
     }
 
     public class TableDataColumn

@@ -62,7 +62,7 @@ namespace CadExtract.Library.TablePatterns
     {
         public static TablePattern BomPattern => TablePatternParser.ParseDataPattern("Bom", BomPatternText);
         public static string BomPatternText = @"
-# Item
+# ItemNumber
 
     - item
     - item no
@@ -95,7 +95,7 @@ namespace CadExtract.Library.TablePatterns
 
         public static TablePattern WireHarnessPattern => TablePatternParser.ParseDataPattern("WireHarness", WireHarnessPatternText);
         public static string WireHarnessPatternText = @"
-# Item                    
+# ItemNumber                    
 
     - (item|wire|tag)\s?(no\.?|#|num)
 
@@ -189,7 +189,7 @@ namespace CadExtract.Library.TablePatterns
     
     - #2 strip (length|end)     
 
-# Item2?                    
+# ItemNumber_Duplicate?                    
 
     - (item|wire|tag)\s?(no\.?|#|num)
 

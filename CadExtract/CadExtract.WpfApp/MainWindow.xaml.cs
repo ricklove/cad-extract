@@ -381,5 +381,35 @@ namespace CadExtract.WpfApp
             var closestTableData = _dataTables.Where(x => x.SourceBounds.Contains(e.WorldPosition)).OrderBy(x => (x.SourceBounds.Center - e.WorldPosition).LengthSquared()).FirstOrDefault();
             Draw_TableDataInDrawing(compTableDataInDrawing, _cadData, _dataTables, closestTableData);
         }
+
+        private void BtnCopy_Click(object sender, RoutedEventArgs e) => OnCopyCommand();
+        private void OnCopy(object sender, System.Windows.Input.ExecutedRoutedEventArgs e) => OnCopyCommand();
+        private void OnCopyCommand()
+        {
+
+            var worldBounds = compTableDataInDrawing.DrawingData.ScreenWorldBounds;
+            var worldCenter = new Vector2(worldBounds.X, worldBounds.Y) + new Vector2(worldBounds.Size.Width, worldBounds.Size.Height) * 0.5f;
+
+            if (compTableDataInDrawing.IsVisible)
+            {
+                if (_dataTables == null) { return; }
+                var closestTableData = _dataTables.Where(x => x.SourceBounds.Contains(worldCenter)).OrderBy(x => (x.SourceBounds_Cropped.Center - worldCenter).LengthSquared()).FirstOrDefault();
+
+                if (closestTableData == null) { return; }
+                Clipboard.SetText(closestTableData.ToClipboard_HtmlTableFormat());
+                return;
+            }
+
+            // Otherwise use raw
+            if (true)
+            {
+                if (_lineTableData == null) { return; }
+                var closestTable = _lineTableData.LineTables.Where(x => x.Bounds.Contains(worldCenter)).OrderBy(x => (x.Bounds.Center - worldCenter).LengthSquared()).FirstOrDefault();
+
+                if (closestTable == null) { return; }
+                Clipboard.SetText(closestTable.ToClipboard_HtmlTableFormat());
+                return;
+            }
+        }
     }
 }
