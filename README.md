@@ -46,9 +46,9 @@ Extract Tabular Data from Cad Drawing Files
 
 ## Screen Shots
 
-![Raw Preview](media/raw.png?raw=true "Raw Preview")
-![Found Tables](media/tables.png?raw=true "Found Tables")
-![Extracted Data](media/data.png?raw=true "Extracted Data")
+![Raw Preview](Media/raw.png)
+![Found Tables](Media/tables.png)
+![Extracted Data](Media/data.png)
 
 ## License
 
