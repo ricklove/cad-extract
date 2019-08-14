@@ -36,8 +36,8 @@ namespace CadExtract.Library.Layout
             //var keep_col = keep_col_mult.Concat(keep_col_single).Distinct().ToList();
             //var keep_row = keep_row_mult.Concat(keep_row_single).Distinct().ToList();
 
-            var keep_col = table.LineBoxes.SelectMany(x => new[] { x.Col_Min, x.Col_Max }).Distinct();
-            var keep_row = table.LineBoxes.SelectMany(x => new[] { x.Row_Min, x.Row_Max }).Distinct();
+            var keep_col = table.LineBoxes.SelectMany(x => new[] { x.Col_Max }).Distinct();
+            var keep_row = table.LineBoxes.SelectMany(x => new[] { x.Row_Max }).Distinct();
 
             var remove_col = Enumerable.Range(0, cMax + 1).Except(keep_col).ToList();
             var remove_row = Enumerable.Range(0, rMax + 1).Except(keep_row).ToList();

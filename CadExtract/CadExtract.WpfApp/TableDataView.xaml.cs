@@ -52,9 +52,10 @@ namespace CadExtract.WpfApp
                 for (var r = 0; r < _table.Rows.Count; r++)
                 {
                     var row = _table.Rows[r];
-                    for (var c = 0; c < row.Values.Count; c++)
+                    for (var i = 0; i < row.Values.Count; i++)
                     {
-                        var v = row.Values[c];
+                        var v = row.Values[i];
+                        var c = _table.Columns.IndexOf(v.Column);
                         var t = new TextBox() { Text = v.Value, TextWrapping = System.Windows.TextWrapping.Wrap, MaxWidth = 100 };
                         t.SetValue(Grid.RowProperty, rMax - r + 1);
                         t.SetValue(Grid.ColumnProperty, c + 1);
