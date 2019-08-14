@@ -37,6 +37,7 @@ Extract Tabular Data from Cad Drawing Files
 
 - [x] Cell Column and Row should work for multiple neighbor connections
 - [ ] Top Header Cell does not get full column span
+- [ ] Handle Duplicate Rows because of split cells with markthrough line
 
 ## License
 

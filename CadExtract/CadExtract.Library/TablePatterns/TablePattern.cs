@@ -137,7 +137,11 @@ namespace CadExtract.Library.TablePatterns
 
 # WireArea?               
 
-    - (wire|wiring) area                                                              
+    - (wire|wiring) area    
+
+# InsulationThickness?               
+
+    - insu[a-z\.]* th[a-z\.]*
 
 # TermA_PartNumber?       
 
@@ -152,7 +156,7 @@ namespace CadExtract.Library.TablePatterns
 
 # TermA_Insulation?       
 
-    - (#1 ((term[a-z\.]*|heat|shrink|sleeve|wire|part no\. 46 ?-|ins[a-z\.]*) )+)                     
+    - (heat|shrink|sleeve|part no\. 46 ?-|ins[a-z\.]*)
 
 # TermA_TinnedEnd?        
 
@@ -175,7 +179,7 @@ namespace CadExtract.Library.TablePatterns
 
 # TermB_Insulation?       
 
-    - ((#2 ((term[a-z\.]*|heat|shrink|sleeve|wire|part no\. 46 ?-|ins[a-z\.]*) )+)|(^term. insul.)|(^insul. term.))
+    - (heat|shrink|sleeve|part no\. 46 ?-|ins[a-z\.]*)
 
 # TermB_TinnedEnd?        
 
@@ -185,7 +189,11 @@ namespace CadExtract.Library.TablePatterns
     
     - #2 strip (length|end)     
 
+# Item2?                    
 
+    - (item|wire|tag)\s?(no\.?|#|num)
+
+	* [0-9]+
 ";
     }
 
