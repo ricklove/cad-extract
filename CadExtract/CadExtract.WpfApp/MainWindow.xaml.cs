@@ -1,7 +1,7 @@
 ﻿using CadExtract.Library;
 using CadExtract.Library.Geometry;
-using CadExtract.Library.Importers;
 using CadExtract.Library.Layout;
+using CadExtract.Library.Process;
 using CadExtract.Library.TablePatterns;
 using DebugCanvasWpf.DotNetFramework;
 using System;
@@ -14,9 +14,7 @@ namespace CadExtract.WpfApp
 {
     public partial class MainWindow : Window
     {
-        private CadData _cadData;
-        private LineTableData _lineTableData;
-        private List<TableData> _dataTables;
+        private ExtractionData _data;
 
         public MainWindow() => InitializeComponent();
 
@@ -42,21 +40,19 @@ namespace CadExtract.WpfApp
             if (d.ShowDialog() == false) { return; }
 
             txtFilePath.Text = d.FileName;
+            LoadFile(txtFilePath.Text);
         }
 
-        private void BtnLoad_Click(object sender, RoutedEventArgs e)
+        private void BtnLoad_Click(object sender, RoutedEventArgs e) => LoadFile(txtFilePath.Text);
+        private void LoadFile(string filePath)
         {
-            var filePath = txtFilePath.Text;
-            var cadData = NetDxfImporter.Import(filePath);
-            var lineTableData = new LineTableData() { LineBoxes = LineBoxFinder.FindLineBoxesWithTexts(cadData.Lines, cadData.Texts, cadData.Circles) };
-            lineTableData.LineBoxNeighbors = LineBoxNeighborsPushAlgorithm.Solve(lineTableData.LineBoxes);
-            lineTableData.LineTables_Uncondensed = LineTablesLayout.FindLineTables(lineTableData.LineBoxNeighbors, shouldCondense: false);
-            lineTableData.LineTables = LineTablesLayout.FindLineTables(lineTableData.LineBoxNeighbors, shouldCondense: true);
-
             var patterns = new[] { TablePattern_Samples.BomPattern, TablePattern_Samples.WireHarnessPattern };
-            var dataTables = patterns.SelectMany(p => lineTableData.LineTables.Select(lineTable => TablePatternDataExtraction.ExtractTable(lineTable, p))).Where(x => x != null && x.Rows.Any()).ToList();
+            var data = ExtractionProcess.ExtractData(filePath, patterns);
+            var cadData = data.CadData;
+            var lineTableData = data.LineTableData;
+            var dataTables = data.DataTables;
 
-            var dataRowInfo = lineTableData.LineTables.Select(x => TableDataRowFinder.FindDataRowsAndColumns(x)).ToList();
+            // var dataRowInfo = lineTableData.LineTables.Select(x => TableDataRowFinder.FindDataRowsAndColumns(x)).ToList();
 
             Draw_RawView(compRawView, cadData);
             Draw_BoxesView(compBoxesView, cadData, lineTableData);
@@ -73,9 +69,7 @@ namespace CadExtract.WpfApp
             compTablesData.Items.Clear();
             dataTables.ForEach(x => compTablesData.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableName}", Content = new TableDataView() { Table = x } }));
 
-            _cadData = cadData;
-            _lineTableData = lineTableData;
-            _dataTables = dataTables;
+            _data = data;
         }
 
         private void Draw_RawView(DebugCanvasComponent view, CadData cadData)
@@ -375,11 +369,11 @@ namespace CadExtract.WpfApp
             if (sender != compTablesInDrawing
                 && sender != compTableDataInDrawing) { return; }
 
-            var closestTable = _lineTableData.LineTables.Where(x => x.Bounds.Contains(e.WorldPosition)).OrderBy(x => (x.Bounds.Center - e.WorldPosition).LengthSquared()).FirstOrDefault();
-            Draw_TablesInDrawing(compTablesInDrawing, _cadData, _lineTableData, closestTable);
+            var closestTable = _data.LineTableData.LineTables.Where(x => x.Bounds.Contains(e.WorldPosition)).OrderBy(x => (x.Bounds.Center - e.WorldPosition).LengthSquared()).FirstOrDefault();
+            Draw_TablesInDrawing(compTablesInDrawing, _data.CadData, _data.LineTableData, closestTable);
 
-            var closestTableData = _dataTables.Where(x => x.SourceBounds.Contains(e.WorldPosition)).OrderBy(x => (x.SourceBounds.Center - e.WorldPosition).LengthSquared()).FirstOrDefault();
-            Draw_TableDataInDrawing(compTableDataInDrawing, _cadData, _dataTables, closestTableData);
+            var closestTableData = _data.DataTables.Where(x => x.SourceBounds.Contains(e.WorldPosition)).OrderBy(x => (x.SourceBounds.Center - e.WorldPosition).LengthSquared()).FirstOrDefault();
+            Draw_TableDataInDrawing(compTableDataInDrawing, _data.CadData, _data.DataTables, closestTableData);
         }
 
         private void BtnCopy_Click(object sender, RoutedEventArgs e) => OnCopyCommand();
@@ -390,10 +384,11 @@ namespace CadExtract.WpfApp
             var worldBounds = compTableDataInDrawing.DrawingData.ScreenWorldBounds;
             var worldCenter = new Vector2(worldBounds.X, worldBounds.Y) + new Vector2(worldBounds.Size.Width, worldBounds.Size.Height) * 0.5f;
 
+            if (_data == null) { return; }
+
             if (compTableDataInDrawing.IsVisible)
             {
-                if (_dataTables == null) { return; }
-                var closestTableData = _dataTables.Where(x => x.SourceBounds.Contains(worldCenter)).OrderBy(x => (x.SourceBounds_Cropped.Center - worldCenter).LengthSquared()).FirstOrDefault();
+                var closestTableData = _data.DataTables.Where(x => x.SourceBounds.Contains(worldCenter)).OrderBy(x => (x.SourceBounds_Cropped.Center - worldCenter).LengthSquared()).FirstOrDefault();
 
                 if (closestTableData == null) { return; }
                 Clipboard.SetText(closestTableData.ToClipboard_HtmlTableFormat());
@@ -403,8 +398,7 @@ namespace CadExtract.WpfApp
             // Otherwise use raw
             if (true)
             {
-                if (_lineTableData == null) { return; }
-                var closestTable = _lineTableData.LineTables.Where(x => x.Bounds.Contains(worldCenter)).OrderBy(x => (x.Bounds.Center - worldCenter).LengthSquared()).FirstOrDefault();
+                var closestTable = _data.LineTableData.LineTables.Where(x => x.Bounds.Contains(worldCenter)).OrderBy(x => (x.Bounds.Center - worldCenter).LengthSquared()).FirstOrDefault();
 
                 if (closestTable == null) { return; }
                 Clipboard.SetText(closestTable.ToClipboard_HtmlTableFormat());
