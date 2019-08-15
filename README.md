@@ -26,6 +26,13 @@ Extract Tabular Data from Cad Drawing Files
 - [x] Preview Extracted Tables
 - [x] Preview Extracted Tables (in Situ)
 - [x] Copy to Clipboard in Excel Format (Html Format)
+- [ ] ExtractionDataView Wpf Control
+    - [ ] Show Default (Final) View
+    - [ ] Optionally show debug views
+    - [ ] Display Focused Table Data in DataGrid at Bottom of view (for Final view)
+- [ ] Error Detection
+    - [ ] Add Unmatched Text for TableData Rows (for any row text in table which did not match the table pattern)
+    - [ ] 
 - [ ] Generate a .csv file (without merged cells)
 - [ ] Generate a .xlsx file (with merged cells)
 - [ ] Transform extracted rows into a .json file (converting column values into object fields)
