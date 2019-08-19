@@ -21,33 +21,34 @@ namespace CadExtract.Library.TablePatterns
             }).ToList();
 
             var rows = tableInfo.Rows.Select(row =>
-              {
-                  var rowOut = new TableDataRow()
-                  {
-                      Values = columnPatterns.Select(col =>
-                      {
-                          var v = row.Values.Where(x => x.Cols.Contains(col.Value)).FirstOrDefault();
-                          if (v == null) { return null; }
+            {
+                var rowOut = new TableDataRow()
+                {
+                    Values = columnPatterns.Select(col =>
+                    {
+                        var v = row.Values.Where(x => x.Cols.Contains(col.Value)).FirstOrDefault();
+                        if (v == null) { return null; }
 
-                          // Ensure value matches pattern
-                          if (!col.Key.ValueMatchRegex.IsMatch(v.Cell.CellText)) { return null; }
+                        // Ensure value matches pattern
+                        if (!col.Key.ValueMatchRegex.IsMatch(v.Cell.CellText)) { return null; }
 
-                          var column = columns.Where(c => c.Name == col.Key.Name).FirstOrDefault();
+                        var column = columns.Where(c => c.Name == col.Key.Name).FirstOrDefault();
 
-                          return new TableDataValue()
-                          {
-                              Column = column,
-                              Value = v.Cell.CellText,
-                              SourceBounds = v.Cell.Box.Bounds,
-                              FontHeight = v.Cell.Box.Texts.Average(x => x.FontHeight),
-                          };
-                      }).Where(x => x != null).ToList()
-                  };
+                        return new TableDataValue()
+                        {
+                            Column = column,
+                            Value = v.Cell.CellText,
+                            MergeId = v.Cell.Col_Span > 1 || v.Cell.Row_Span > 1 ? "" + v.Cell.CellId : null as string,
+                            SourceBounds = v.Cell.Box.Bounds,
+                            FontHeight = v.Cell.Box.Texts.Average(x => x.FontHeight),
+                        };
+                    }).Where(x => x != null).ToList()
+                };
 
-                  if (!columnPatterns.Keys.Where(x => x.IsRequired).All(x => rowOut.Values.Any(y => y.Column.Name == x.Name))) { return null; }
+                if (!columnPatterns.Keys.Where(x => x.IsRequired).All(x => rowOut.Values.Any(y => y.Column.Name == x.Name))) { return null; }
 
-                  return rowOut;
-              }).Where(x => x != null).ToList();
+                return rowOut;
+            }).Where(x => x != null).ToList();
 
             // columns.ForEach(col => col.SourceBounds = rows.SelectMany(x => x.Values).Where(v => v.Column == col).Select(x => x.SourceBounds).UnionBounds());
             // columns.ForEach(col => col.SourceHeaderText =  rows.SelectMany(x => x.Values).Where(v => v.Column == col).Select(x => x.SourceBounds).UnionBounds());

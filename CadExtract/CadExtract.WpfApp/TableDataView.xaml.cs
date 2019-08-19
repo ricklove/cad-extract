@@ -1,4 +1,5 @@
-﻿using CadExtract.Library.TablePatterns;
+﻿using CadExtract.Library;
+using CadExtract.Library.TablePatterns;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -56,7 +57,8 @@ namespace CadExtract.WpfApp
                     {
                         var v = row.Values[i];
                         var c = _table.Columns.IndexOf(v.Column);
-                        var t = new TextBox() { Text = v.Value, TextWrapping = System.Windows.TextWrapping.Wrap, MaxWidth = 100 };
+                        var text = $"{(v.MergeId.IsNullOrEmpty() ? "" : $"[{v.MergeId}] ")}{v.Value}";
+                        var t = new TextBox() { Text = text, TextWrapping = System.Windows.TextWrapping.Wrap, MaxWidth = 100 };
                         t.SetValue(Grid.RowProperty, rMax - r + 1);
                         t.SetValue(Grid.ColumnProperty, c + 1);
                         //t.SetValue(Grid.RowSpanProperty, b.Row_Span);

@@ -119,6 +119,7 @@ namespace CadExtract.Library.Layout
             for (var i = 0; i < boxes.Count; i++)
             {
                 boxes[i].TableId = i;
+                boxes[i].CellId = i;
             }
 
             var hasChanged = false;

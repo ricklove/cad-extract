@@ -22,7 +22,7 @@ Extract Tabular Data from Cad Drawing Files
     - [x] Preview Table Pattern Data (In Situ)
     - [ ] Table Pattern Editor
     - [ ] Table Pattern Discovery (from scanning multiple drawings)
-    - [ ] Handle Merged Row Cells
+    - [x] Handle Merged Row Cells
 - [x] Preview Extracted Tables
 - [x] Preview Extracted Tables (in Situ)
 - [x] Copy to Clipboard in Excel Format (Html Format)

@@ -60,6 +60,7 @@ namespace CadExtract.Library.Layout
         public int Col_Span => Col_Max - Col_Min + 1;
 
         public int TableId { get; set; }
+        public int CellId { get; set; }
     }
 
     public class LineBoxCell
@@ -73,6 +74,7 @@ namespace CadExtract.Library.Layout
             Row_Max = box.Row_Max;
             Col_Max = box.Col_Max;
             TableId = box.TableId;
+            CellId = box.CellId;
         }
 
         private readonly LineBoxNeighbors _debug_box;
@@ -93,6 +95,8 @@ namespace CadExtract.Library.Layout
 
         public int TableId { get; set; }
         public bool IsDataCell { get; set; }
+
+        public int CellId { get; set; }
 
         public override string ToString() => $"{CellText} ({ColumnRowText})";
     }
