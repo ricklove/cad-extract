@@ -1,5 +1,7 @@
 # Cad Extract
 
+[![nuget](https://img.shields.io/nuget/v/CadExtract.Library.svg)](https://www.nuget.org/packages/CadExtract.Library/)
+
 Extract Tabular Data from Cad Drawing Files
 
 ## Features
