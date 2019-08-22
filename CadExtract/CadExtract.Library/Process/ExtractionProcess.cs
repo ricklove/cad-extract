@@ -11,6 +11,7 @@ namespace CadExtract.Library.Process
         public CadData CadData { get; set; }
         public LineTableData LineTableData { get; set; }
         public List<TableData> DataTables { get; set; }
+        public List<CadText> MissingTexts { get; set; }
     }
 
     public static class ExtractionProcess
@@ -25,11 +26,16 @@ namespace CadExtract.Library.Process
 
             var dataTables = patterns.SelectMany(p => lineTableData.LineTables.Select(lineTable => TablePatternDataExtraction.ExtractTable(lineTable, p))).Where(x => x != null && x.Rows.Any()).ToList();
 
+            var allDataValues = dataTables.SelectMany(x => x.Rows.SelectMany(y => y.Values)).ToList();
+            var missingTexts = cadData.Texts.Where(t => !allDataValues.Where(v => v.Value.Contains(t.Text) && v.SourceBounds.Intersects(t.Bounds)).Any()).ToList();
+            // var missingTextsInTableArea = missingTexts.Where(x => dataTables.Where(d => x.Bounds.Intersects(d.SourceBounds)).Any()).ToList();
+
             var extractionData = new ExtractionData()
             {
                 CadData = cadData,
                 LineTableData = lineTableData,
                 DataTables = dataTables,
+                MissingTexts = missingTexts,
             };
 
             return extractionData;

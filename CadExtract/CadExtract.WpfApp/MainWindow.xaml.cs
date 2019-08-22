@@ -58,7 +58,7 @@ namespace CadExtract.WpfApp
             Draw_BoxesView(compBoxesView, cadData, lineTableData);
             Draw_BoxNeighborsView(compBoxNeighborsView, cadData, lineTableData);
             Draw_TablesInDrawing(compTablesInDrawing, cadData, lineTableData);
-            Draw_TableDataInDrawing(compTableDataInDrawing, cadData, dataTables);
+            Draw_TableDataInDrawing(compTableDataInDrawing, data.MissingTexts, dataTables);
 
             compTablesUncondensed.Items.Clear();
             lineTableData.LineTables_Uncondensed.ForEach(x => compTablesUncondensed.Items.Add(new System.Windows.Controls.TabItem() { Header = $"Table {x.TableId}", Content = new LineTableView() { Table = x } }));
@@ -295,7 +295,7 @@ namespace CadExtract.WpfApp
             view.Render();
         }
 
-        private void Draw_TableDataInDrawing(DebugCanvasComponent view, CadData cadData, List<TableData> tableData, TableData highlightTable = null)
+        private void Draw_TableDataInDrawing(DebugCanvasComponent view, List<CadText> missingTexts, List<TableData> tableData, TableData highlightTable = null)
         {
             var d = view.DrawingData;
             d.ClearDrawings();
@@ -308,11 +308,11 @@ namespace CadExtract.WpfApp
 
             //if (highlightTable == null)
             //{
-            foreach (var t in cadData.Texts)
+            foreach (var t in missingTexts)
             {
-                if (highlightTable != null && highlightTable.SourceBounds.Contains(t.Bounds.Center)) { continue; }
-                var hasMatch = tableData.SelectMany(x => x.Rows.SelectMany(y => y.Values)).Where(v => v.Value.Contains(t.Text) && v.SourceBounds.Intersects(t.Bounds)).Any();
-                if (hasMatch) { continue; }
+                //if (highlightTable != null && highlightTable.SourceBounds.Contains(t.Bounds.Center)) { continue; }
+                //var hasMatch = tableData.SelectMany(x => x.Rows.SelectMany(y => y.Values)).Where(v => v.Value.Contains(t.Text) && v.SourceBounds.Intersects(t.Bounds)).Any();
+                //if (hasMatch) { continue; }
 
                 d.DrawBox(t.Bounds.Center, size: t.Bounds.Size, color: System.Drawing.Color.FromArgb(50, System.Drawing.Color.Red));
                 d.DrawBox(t.Bounds.Center, size: t.Bounds.Size, color: System.Drawing.Color.FromArgb(100, System.Drawing.Color.Red), shouldFill: false);
@@ -373,7 +373,7 @@ namespace CadExtract.WpfApp
             Draw_TablesInDrawing(compTablesInDrawing, _data.CadData, _data.LineTableData, closestTable);
 
             var closestTableData = _data.DataTables.Where(x => x.SourceBounds.Contains(e.WorldPosition)).OrderBy(x => (x.SourceBounds.Center - e.WorldPosition).LengthSquared()).FirstOrDefault();
-            Draw_TableDataInDrawing(compTableDataInDrawing, _data.CadData, _data.DataTables, closestTableData);
+            Draw_TableDataInDrawing(compTableDataInDrawing, _data.MissingTexts, _data.DataTables, closestTableData);
         }
 
         private void BtnCopy_Click(object sender, RoutedEventArgs e) => OnCopyCommand();
