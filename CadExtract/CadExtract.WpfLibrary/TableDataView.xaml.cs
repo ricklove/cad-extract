@@ -3,7 +3,7 @@ using CadExtract.Library.TablePatterns;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace CadExtract.WpfApp
+namespace CadExtract.WpfLibrary
 {
     /// <summary>
     /// Interaction logic for TableDataView.xaml

@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>CadExtract.Library</id>
-    <version>1.0.0</version>
+    <version>1.0.5</version>
     <title>CadExtract.Library</title>
     <authors>Rick Love</authors>
     <owners>Rick Love</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/ricklove/cad-extract</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>CadExtract.Library</description>
+    <description>Extract Tabular Data from Cad Drawing Files</description>
     <releaseNotes>Initial Release</releaseNotes>
     <copyright>Copyright © Rick Love 2019</copyright>
     <tags>cad</tags>

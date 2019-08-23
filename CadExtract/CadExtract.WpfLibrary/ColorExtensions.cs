@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace CadExtract.WpfApp
+namespace CadExtract.WpfLibrary
 {
     public static class ColorExtensions
     {
