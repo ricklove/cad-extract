@@ -19,6 +19,10 @@ namespace CadExtract.WpfLibrary
 
         public MainView() => InitializeComponent();
 
+        public string DxfFilePath { get => txtFilePath.Text; set => txtFilePath.Text = value; }
+        public TablePattern[] TablePatterns { get; set; } = new[] { TablePattern_Samples.BomPattern, TablePattern_Samples.WireHarnessPattern };
+        public void Load() => LoadFile(DxfFilePath);
+
         private void OnWorldBoundsChanged(object sender, EventArgs e)
         {
             var worldBounds = compRawView.WorldBounds;
@@ -47,7 +51,7 @@ namespace CadExtract.WpfLibrary
         private void BtnLoad_Click(object sender, RoutedEventArgs e) => LoadFile(txtFilePath.Text);
         private void LoadFile(string filePath)
         {
-            var patterns = new[] { TablePattern_Samples.BomPattern, TablePattern_Samples.WireHarnessPattern };
+            var patterns = TablePatterns;
             var data = ExtractionProcess.ExtractData(filePath, patterns);
             var cadData = data.CadData;
             var lineTableData = data.LineTableData;

@@ -4,7 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <NuspecFile>CadExtract.Library.nuspec</NuspecFile>
+    <Version>1.0.7</Version>
+    <Description>Extract Tabular Data from Cad Drawing Files</Description>
+    <PackageProjectUrl>https://github.com/ricklove/cad-extract</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Rick Love</Authors>
+    <Copyright>Copyright © Rick Love 2019</Copyright>
+    <PackageTags>cad</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
