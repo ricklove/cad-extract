@@ -6,8 +6,15 @@ namespace CadExtract.Library.TablePatterns
 {
     public class TablePattern
     {
+        public string PatternDocument { get; internal set; }
         public string Name { get; internal set; }
         public List<TablePatternColumn> Columns { get; internal set; }
+
+        public void UpdatePatternDocument(string patternDocument)
+        {
+            PatternDocument = patternDocument;
+            Columns = TablePatternParser.ParseDataPatternColumns(patternDocument);
+        }
     }
 
     public class TablePatternColumn
@@ -30,6 +37,18 @@ namespace CadExtract.Library.TablePatterns
     {
         public static TablePattern ParseDataPattern(string name, string patternDocument)
         {
+            var columns = ParseDataPatternColumns(patternDocument);
+
+            return new TablePattern()
+            {
+                PatternDocument = patternDocument,
+                Name = name,
+                Columns = columns
+            };
+        }
+
+        internal static List<TablePatternColumn> ParseDataPatternColumns(string patternDocument)
+        {
             var columnSections = patternDocument.Replace("\r\n", "\n").Replace("\n#", "\r").Split('\r').Select(x => x.Trim()).Where(x => !x.IsNullOrEmpty()).ToList();
 
             var columns = columnSections.Select(section =>
@@ -49,12 +68,7 @@ namespace CadExtract.Library.TablePatterns
                     ValueMatchPattern = "(?:" + valueMatches.Select(x => $"(?:{x})").ConcatString("|").Replace("  ", " ").Replace("  ", " ").Replace(" ", "\\s+") + ")",
                 };
             }).ToList();
-
-            return new TablePattern()
-            {
-                Name = name,
-                Columns = columns
-            };
+            return columns;
         }
     }
 

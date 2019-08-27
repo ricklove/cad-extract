@@ -50,6 +50,9 @@
             <TabItem Header="Tables (in Drawing)">
                 <dc:DebugCanvasComponent x:Name="compTableDataInDrawing" WorldBoundsChanged="OnWorldBoundsChanged" Click="OnDrawingClick"/>
             </TabItem>
+            <TabItem Header="* Table Patterns">
+                <local:TablePatternEditor x:Name="compTablePatternEditor"/>
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

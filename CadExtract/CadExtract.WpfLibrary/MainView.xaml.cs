@@ -17,10 +17,22 @@ namespace CadExtract.WpfLibrary
     {
         private ExtractionData _data;
 
-        public MainView() => InitializeComponent();
+        public MainView()
+        {
+            InitializeComponent();
+            TablePatterns = new[] { TablePattern_Samples.BomPattern, TablePattern_Samples.WireHarnessPattern };
+            compTablePatternEditor.TablePatternChanged += (s, e) =>
+            {
+                _tablePatterns = compTablePatternEditor.TablePatterns;
+
+                if (txtFilePath.Text.IsNullOrEmpty()) { return; }
+                LoadFile(txtFilePath.Text);
+            };
+        }
 
         public string DxfFilePath { get => txtFilePath.Text; set => txtFilePath.Text = value; }
-        public TablePattern[] TablePatterns { get; set; } = new[] { TablePattern_Samples.BomPattern, TablePattern_Samples.WireHarnessPattern };
+        private TablePattern[] _tablePatterns;
+        public TablePattern[] TablePatterns { get => _tablePatterns; set { _tablePatterns = value; compTablePatternEditor.TablePatterns = value; } }
         public void Load() => LoadFile(DxfFilePath);
 
         private void OnWorldBoundsChanged(object sender, EventArgs e)
